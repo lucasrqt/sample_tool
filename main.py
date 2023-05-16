@@ -8,24 +8,19 @@ from torchvision.transforms import ToTensor
 import torchvision.transforms as T
 import PIL
 import matplotlib.pyplot as plt
+import configs
 
-PATH="../ILSVRC2012/"
-
-# image transformation parameters
-IMG_SIZE = (518, 518) # vit h 14 expects 518*518 resolution
-NORMALIZE_MEAN = (0.5, 0.5, 0.5)
-NORMALIZE_STD = (0.5, 0.5, 0.5)
 transforms = [
-              T.Resize(IMG_SIZE),
+              T.Resize(configs.IMG_SIZE),
               T.ToTensor(),
-              T.Normalize(NORMALIZE_MEAN, NORMALIZE_STD),
+              T.Normalize(configs.NORMALIZE_MEAN, configs.NORMALIZE_STD),
               ]
 
 transforms = T.Compose(transforms)
 
 # initializing the dataset
 test_set = ImageNet(
-    root=PATH,
+    root=configs.DATA_PATH,
     transform=transforms,
     split="val",
 )
@@ -54,5 +49,11 @@ if __name__ == '__main__':
     output = model(image)
     pred = int(torch.argmax(output))
 
-    label = label.item()
-    print(f"label: {imagenet_labels[label]}prediction: {imagenet_labels[pred]}")
+    torch.save(output, configs.MODEL_PATH)
+
+    print(f"label: {imagenet_labels[label.item()]}prediction: {imagenet_labels[pred]}")
+
+    cpu = torch.device("cpu")
+    gold_output = torch.load(configs.MODEL_PATH, map_location=cpu)
+    gold_op_val = int(torch.argmax(gold_output))
+    print(imagenet_labels[gold_op_val])
