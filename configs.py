@@ -1,6 +1,6 @@
 
 DATA_PATH="../ILSVRC2012/"
-MODEL_PATH="./gold_save.pt"
+OUTPUT_PATH="./gold_save.pt"
 
 # image transformation parameters
 IMG_SIZE = (518, 518) # vit h 14 expects 518*518 resolution
