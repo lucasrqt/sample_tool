@@ -10,6 +10,8 @@ import PIL
 import matplotlib.pyplot as plt
 import configs
 import argparse
+import os
+import logging
 
 transforms = [
               T.Resize(configs.IMG_SIZE),
@@ -50,11 +52,24 @@ def equal(rhs: torch.Tensor, lhs: torch.Tensor, threshold: float = 0) -> bool:
         return bool(torch.equal(rhs, lhs))
 
 
+def log_errors(output_tensor: torch.Tensor, golden_tensor: torch.Tensor, logger: logging.Logger):
+    pass
+
+
 def main():
     # parser part
     arg_parser = argparse.ArgumentParser(prog="sample-tool", add_help=True)
     arg_parser.add_argument('-l', "--loadsave", help="path to the save to load", type=str)
     args = arg_parser.parse_args()
+
+    # logger
+    log_filename = str(os.path.basename(__file__)).replace(".py", "")
+    logging.basicConfig(filename=log_filename,
+                                 filemode="a",
+                                 format="%(asctime)s %(message)s",
+                                 level=logging.ERROR,)
+
+    logger = logging.getLogger()
 
     # inference w/ dataloader
     image, label = next(iter(data_loader))
@@ -74,7 +89,7 @@ def main():
     else:
         prev_output = torch.load(configs.OUTPUT_PATH, map_location=torch.device("cuda"))
         if not equal(output, prev_output):
-            pass
+            log_errors(output, prev_output, logger)
 
     #print(f"label: {imagenet_labels[label.item()]}prediction: {imagenet_labels[pred]}")
 
