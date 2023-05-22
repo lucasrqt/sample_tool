@@ -51,10 +51,22 @@ def equal(rhs: torch.Tensor, lhs: torch.Tensor, threshold: float = 0) -> bool:
     else:
         return bool(torch.equal(rhs, lhs))
 
+def get_top_k_labels(tensor: torch.tensor, top_k: int) -> torch.tensor:
+    proba = torch.nn.functional.softmax(tensor, 0)
+    return torch.topk(proba, k=top_k).indices.squeeze(0)
 
-def log_errors(output_tensor: torch.Tensor, golden_tensor: torch.Tensor, logger: logging.Logger):
-    pass
+def compare_classification(output_tsr: torch.tensor, golden_tsr: torch.tensor, top_k: int, logger: logging.Logger) -> int:
+    output_errors = 0
+    output_topk = get_top_k_labels(output_tsr, top_k)
+    golden_topk = get_top_k_labels(golden_tsr, top_k)
 
+    if not equal(output_topk, golden_topk):
+        for i, (tpk_found, tpk_gold) in enumerate(zip(output_topk, golden_topk)):
+            if tpk_found != tpk_gold:
+                err_str = f"error i:{i} -- g:{tpk_gold}  o:{tpk_found}"
+                output_errors += 1
+
+    return output_errors
 
 def main():
     # parser part
@@ -63,7 +75,7 @@ def main():
     args = arg_parser.parse_args()
 
     # logger
-    log_filename = str(os.path.basename(__file__)).replace(".py", "")
+    log_filename = "./" + configs.LOG_FILENAME
     logging.basicConfig(filename=log_filename,
                                  filemode="a",
                                  format="%(asctime)s %(message)s",
@@ -82,16 +94,13 @@ def main():
 
     # moving output to CPU
     output_cpu = output.to("cpu")
-    #pred = int(torch.argmax(output))
 
     if not args.loadsave:
         torch.save(output_cpu, configs.OUTPUT_PATH)
     else:
-        prev_output = torch.load(configs.OUTPUT_PATH, map_location=torch.device("cuda"))
-        if not equal(output, prev_output):
-            log_errors(output, prev_output, logger)
-
-    #print(f"label: {imagenet_labels[label.item()]}prediction: {imagenet_labels[pred]}")
+        prev_output = torch.load(args.loadsave, map_location=torch.device("cuda"))
+        nb_errs = compare_classification(output, prev_output, configs.TOP_K_MAX, logger=logger)
+        print(f" [+] nb errors: {nb_errs}")
 
 
 if __name__ == '__main__':
