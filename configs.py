@@ -1,5 +1,5 @@
 
-DATA_PATH="../ILSVRC2012/"
+DATA_PATH="/home/lucasroquet/ILSVRC2012/"
 OUTPUT_PATH="./gold_save.pt"
 LOG_FILENAME="sample-tool.log"
 

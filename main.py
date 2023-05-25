@@ -32,7 +32,7 @@ test_set = ImageNet(
 data_loader = DataLoader(test_set, batch_size=1, shuffle=True)
 
 #image labels
-imagenet_labels = dict(enumerate(open('ilsvrc2012_wordnet_lemmas.txt')))
+imagenet_labels = dict(enumerate(open('/home/lucasroquet/sample-tool/ilsvrc2012_wordnet_lemmas.txt')))
 
 # model initialization, Vision Transformer
 model = vit_h_14(weights=ViT_H_14_Weights.IMAGENET1K_SWAG_E2E_V1)
@@ -57,6 +57,7 @@ def get_top_k_labels(tensor: torch.tensor, top_k: int) -> torch.tensor:
 
 def compare_classification(output_tsr: torch.tensor, golden_tsr: torch.tensor, top_k: int, logger: logging.Logger) -> int:
     output_errors = 0
+    output_tsr, golden_tsr = output_tsr.to("cpu"), golden_tsr.to("cpu")
     output_topk = get_top_k_labels(output_tsr, top_k)
     golden_topk = get_top_k_labels(golden_tsr, top_k)
 
