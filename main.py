@@ -66,6 +66,7 @@ def compare_classification(output_tsr: torch.tensor, golden_tsr: torch.tensor, t
             if tpk_found != tpk_gold:
                 err_str = f"error i:{i} -- g:{tpk_gold}  o:{tpk_found}"
                 output_errors += 1
+                logger.error(err_str)
 
     return output_errors
 
