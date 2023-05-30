@@ -2,15 +2,11 @@
 
 import torch
 from torchvision.datasets import ImageNet
-from torch.utils.data import DataLoader
+from torch.utils.data import DataLoader, SequentialSampler
 from torchvision.models import vit_h_14, ViT_H_14_Weights
-from torchvision.transforms import ToTensor
 import torchvision.transforms as T
-import PIL
-import matplotlib.pyplot as plt
 import configs
 import argparse
-import os
 import logging
 
 transforms = [
@@ -27,6 +23,10 @@ test_set = ImageNet(
     transform=transforms,
     split="val",
 )
+
+### -- SAMPLER PART (does not work)
+# original_order = range(configs.DEFAULT_INDEX, configs.DEFAULT_INDEX + 1)
+# subset = SequentialSampler(original_order)
 
 # initializing the dataloader
 data_loader = DataLoader(test_set, batch_size=1)
@@ -56,19 +56,30 @@ def get_top_k_labels(tensor: torch.tensor, top_k: int) -> torch.tensor:
     return torch.topk(proba, k=top_k).indices.squeeze(0)
 
 def compare_classification(output_tsr: torch.tensor, golden_tsr: torch.tensor, top_k: int, logger=None) -> int:
-    output_errors = 0
+    output_errors, classification_errors = 0, 0
     output_tsr, golden_tsr = output_tsr.to("cpu"), golden_tsr.to("cpu")
+
+    # tensor comparison 
+    if not equal(output_tsr, golden_tsr, threshold=1e-4):
+        for i, (output, golden) in enumerate(zip(output_tsr, golden_tsr)):
+            if not equal(output, golden):
+                err_str = f"error, output modified -- expected:{golden}  output:{output}"
+                output_errors += 1
+                if logger:
+                    logger.error(err_str)
+
+    # top k comparison to check if classification has changed 
     output_topk = get_top_k_labels(output_tsr, top_k)
     golden_topk = get_top_k_labels(golden_tsr, top_k)
     if equal(output_topk, golden_topk) is False:
         for i, (tpk_found, tpk_gold) in enumerate(zip(output_topk, golden_topk)):
             if tpk_found != tpk_gold:
-                err_str = f"error i:{i} -- g:{tpk_gold}  o:{tpk_found}"
-                output_errors += 1
+                err_str = f"wrong classification -- expected:{tpk_gold}  output:{tpk_found}"
+                classification_errors += 1
                 if logger:
                     logger.error(err_str)
 
-    return output_errors
+    return output_errors, classification_errors
 
 def main():
     # parser part
@@ -85,10 +96,13 @@ def main():
 
     logger = logging.getLogger()
 
-    # inference w/ dataloader
-    image, label = next(iter(data_loader))
+    data_iter = iter(data_loader)
 
-    # puuting image on GPU
+    # inference w/ dataloader
+    for _i in range(configs.DEFAULT_INDEX+1):
+        image, label = next(data_iter)
+    
+    # puting image on GPU
     image = image.to("cuda")
 
     # getting the prediction
@@ -98,14 +112,18 @@ def main():
     output_cpu = output.to("cpu")
 
     if not args.loadsave:
+        pred = get_top_k_labels(output, top_k=configs.TOP_K_MAX).item()
+        if pred != label.item():
+            print(f" [-] wrong classification value {pred}, expected {label.item()}")
+        
         torch.save(output_cpu, configs.OUTPUT_PATH)
     else:
         pred = int(torch.argmax(output))
         prev_output = torch.load(args.loadsave, map_location=torch.device("cuda"))
         prev_pred = int(torch.argmax(prev_output))
         print(f"loaded: {imagenet_labels[prev_pred]}calculated: {imagenet_labels[pred]}")
-        nb_errs = compare_classification(output, prev_output, configs.TOP_K_MAX, logger=logger)
-        print(f" [+] nb errors: {nb_errs}")
+        output_errs, class_errs = compare_classification(output, prev_output, configs.TOP_K_MAX, logger=logger)
+        print(f" [+] ouput errors: {output_errs} -- classification errors: {class_errs}")
 
 
 if __name__ == '__main__':
