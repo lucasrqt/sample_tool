@@ -29,7 +29,7 @@ test_set = ImageNet(
 )
 
 # initializing the dataloader
-data_loader = DataLoader(test_set, batch_size=1, shuffle=True)
+data_loader = DataLoader(test_set, batch_size=1)
 
 #image labels
 imagenet_labels = dict(enumerate(open('/home/lucasroquet/sample-tool/ilsvrc2012_wordnet_lemmas.txt')))
@@ -52,21 +52,21 @@ def equal(rhs: torch.Tensor, lhs: torch.Tensor, threshold: float = 0) -> bool:
         return bool(torch.equal(rhs, lhs))
 
 def get_top_k_labels(tensor: torch.tensor, top_k: int) -> torch.tensor:
-    proba = torch.nn.functional.softmax(tensor, 0)
+    proba = torch.nn.functional.softmax(tensor, dim=1)
     return torch.topk(proba, k=top_k).indices.squeeze(0)
 
-def compare_classification(output_tsr: torch.tensor, golden_tsr: torch.tensor, top_k: int, logger: logging.Logger) -> int:
+def compare_classification(output_tsr: torch.tensor, golden_tsr: torch.tensor, top_k: int, logger=None) -> int:
     output_errors = 0
     output_tsr, golden_tsr = output_tsr.to("cpu"), golden_tsr.to("cpu")
     output_topk = get_top_k_labels(output_tsr, top_k)
     golden_topk = get_top_k_labels(golden_tsr, top_k)
-
-    if not equal(output_topk, golden_topk):
+    if equal(output_topk, golden_topk) is False:
         for i, (tpk_found, tpk_gold) in enumerate(zip(output_topk, golden_topk)):
             if tpk_found != tpk_gold:
                 err_str = f"error i:{i} -- g:{tpk_gold}  o:{tpk_found}"
                 output_errors += 1
-                logger.error(err_str)
+                if logger:
+                    logger.error(err_str)
 
     return output_errors
 
@@ -100,7 +100,10 @@ def main():
     if not args.loadsave:
         torch.save(output_cpu, configs.OUTPUT_PATH)
     else:
+        pred = int(torch.argmax(output))
         prev_output = torch.load(args.loadsave, map_location=torch.device("cuda"))
+        prev_pred = int(torch.argmax(prev_output))
+        print(f"loaded: {imagenet_labels[prev_pred]}calculated: {imagenet_labels[pred]}")
         nb_errs = compare_classification(output, prev_output, configs.TOP_K_MAX, logger=logger)
         print(f" [+] nb errors: {nb_errs}")
 
