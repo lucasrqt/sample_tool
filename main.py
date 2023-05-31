@@ -118,10 +118,7 @@ def main():
         
         torch.save(output_cpu, configs.OUTPUT_PATH)
     else:
-        pred = int(torch.argmax(output))
         prev_output = torch.load(args.loadsave, map_location=torch.device("cuda"))
-        prev_pred = int(torch.argmax(prev_output))
-        print(f"loaded: {imagenet_labels[prev_pred]}calculated: {imagenet_labels[pred]}")
         output_errs, class_errs = compare_classification(output, prev_output, configs.TOP_K_MAX, logger=logger)
         print(f" [+] ouput errors: {output_errs} -- classification errors: {class_errs}")
 
