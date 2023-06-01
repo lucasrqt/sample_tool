@@ -1,0 +1,15 @@
+inspecting: voidattention_kernel_batched<AttentionKernel<float,cutlass::arch::Sm70,true,32l,128l,true>>(AttentionKernel<float,cutlass::arch::Sm70,true,32l,128l,true>::Params)
+num_static_instrs: 4504
+maxregs: 161(161)
+Injection data
+index: 261
+kernel_name: voidattention_kernel_batched<AttentionKernel<float,cutlass::arch::Sm70,true,32l,128l,true>>(AttentionKernel<float,cutlass::arch::Sm70,true,32l,128l,true>::Params)
+ctas: 688
+instrs: 2556634424
+ grp 0: 0 grp 1: 1755527876 grp 2: 207842452 grp 3: 114979264 grp 4: 83494464 grp 5: 394790368 grp 6: 2473139960 grp 7: 2358160696
+mask: 0x3efd1800
+beforeVal: 0x3efd17ea;afterVal: 0xfea
+regNo: 18
+opcode: LDS
+pcOffset: 0x2800
+tid: 10941

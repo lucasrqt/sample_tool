@@ -1,0 +1,15 @@
+inspecting: voidat::native::vectorized_elementwise_kernel<4,at::native::CUDAFunctor_add<float>,at::detail::Array<char*,3>>(int,at::native::CUDAFunctor_add<float>,at::detail::Array<char*,3>)
+num_static_instrs: 80
+maxregs: 22(22)
+Injection data
+index: 81
+kernel_name: voidat::native::vectorized_elementwise_kernel<4,at::native::CUDAFunctor_add<float>,at::detail::Array<char*,3>>(int,at::native::CUDAFunctor_add<float>,at::detail::Array<char*,3>)
+ctas: 3425
+instrs: 7190528
+ grp 0: 0 grp 1: 1404896 grp 2: 714464 grp 3: 363840 grp 4: 346656 grp 5: 4360672 grp 6: 6843872 grp 7: 6480032
+mask: 0x3d1c63c0
+beforeVal: 0x3d1c63b0;afterVal: 0x70
+regNo: 16
+opcode: FFMA
+pcOffset: 0x130
+tid: 161623

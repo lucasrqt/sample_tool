@@ -1,0 +1,7 @@
+7
+2
+voidattention_kernel_batched<AttentionKernel<float,cutlass::arch::Sm70,true,32l,128l,true>>(AttentionKernel<float,cutlass::arch::Sm70,true,32l,128l,true>::Params)
+338
+5393575961
+0.177451050177042
+0.9858108973228776

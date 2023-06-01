@@ -1,0 +1,15 @@
+inspecting: voidat::native::vectorized_elementwise_kernel<4,at::native::CUDAFunctor_add<float>,at::detail::Array<char*,3>>(int,at::native::CUDAFunctor_add<float>,at::detail::Array<char*,3>)
+num_static_instrs: 80
+maxregs: 22(22)
+Injection data
+index: 32
+kernel_name: voidat::native::vectorized_elementwise_kernel<4,at::native::CUDAFunctor_add<float>,at::detail::Array<char*,3>>(int,at::native::CUDAFunctor_add<float>,at::detail::Array<char*,3>)
+ctas: 3425
+instrs: 6219008
+ grp 0: 0 grp 1: 1168864 grp 2: 619616 grp 3: 322624 grp 4: 286816 grp 5: 3821088 grp 6: 5932192 grp 7: 5609568
+mask: 0x4000
+beforeVal: 0x4;afterVal: 0x4004
+regNo: 10
+opcode: MOV
+pcOffset: 0x70
+tid: 40107

@@ -1,0 +1,7 @@
+7
+3
+voidat::native::vectorized_elementwise_kernel<4,at::native::CUDAFunctor_add<float>,at::detail::Array<char*,3>>(int,at::native::CUDAFunctor_add<float>,at::detail::Array<char*,3>)
+81
+2624432
+0.6285252976190691
+0.9158251531312763
