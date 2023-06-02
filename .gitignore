@@ -162,3 +162,5 @@ cython_debug/
 # pytorch
 *.pt
 *.pth
+*.csv
+run_tests.sh
