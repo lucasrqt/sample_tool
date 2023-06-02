@@ -58,6 +58,10 @@ def parse_results(
 
             res_stderr[gp][md] = {"crashes": crashes}
 
+            res_stdout[gp][md][otpt] = res_stdout[gp][md][otpt] * 100 / faults_per_fm
+            res_stdout[gp][md][cls] = res_stdout[gp][md][cls] * 100 / faults_per_fm
+            res_stdout[gp][md][oth] = res_stdout[gp][md][oth] * 100 / faults_per_fm
+
     return (res_stdout, res_stderr)
 
 
