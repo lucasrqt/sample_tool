@@ -84,7 +84,8 @@ CAT_STR = [
 ### OUTPUT TYPES
 OUTPUT_ERR = 0
 CLASS_ERR = 1
-OTHER_ERR = 2
+MASKED_ERR = 2
+OTHER_ERR = 3
 
 # output types str
-OT_STR = ["Output error", "Classification error", "Other error"]
+OT_STR = ["Output error", "Classification error", "Masked", "Other error"]
