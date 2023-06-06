@@ -1,0 +1,15 @@
+inspecting: voidat::native::elementwise_kernel<128,2,at::native::gpu_kernel_impl<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#2}::operator()()const::{lambda()#7}::operator()()const::{lambda(float)#1}>(at::TensorIteratorBase&,at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#2}::operator()()const::{lambda()#7}::operator()()const::{lambda(float)#1}const&)::{lambda(int)#1}>(int,at::native::gpu_kernel_impl<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#2}::operator()()const::{lambda()#7}::operator()()const::{lambda(float)#1}>(at::TensorIteratorBase&,at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#2}::operator()()const::{lambda()#7}::operator()()const::{lambda(float)#1}const&)::{lambda(int)#1})
+num_static_instrs: 488
+maxregs: 12(12)
+Injection data
+index: 161
+kernel_name: voidat::native::elementwise_kernel<128,2,at::native::gpu_kernel_impl<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#2}::operator()()const::{lambda()#7}::operator()()const::{lambda(float)#1}>(at::TensorIteratorBase&,at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#2}::operator()()const::{lambda()#7}::operator()()const::{lambda(float)#1}const&)::{lambda(int)#1}>(int,at::native::gpu_kernel_impl<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#2}::operator()()const::{lambda()#7}::operator()()const::{lambda(float)#1}>(at::TensorIteratorBase&,at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#2}::operator()()const::{lambda()#7}::operator()()const::{lambda(float)#1}const&)::{lambda(int)#1})
+ctas: 20550
+instrs: 89979104
+ grp 0: 0 grp 1: 0 grp 2: 2193600 grp 3: 11331872 grp 4: 4493792 grp 5: 71959840 grp 6: 85485312 grp 7: 74153440
+mask: 0x8
+beforeVal: 0x0;afterVal: 0x8
+regNo: 4
+opcode: MOV
+pcOffset: 0x180
+tid: 828338

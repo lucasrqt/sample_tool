@@ -1,0 +1,4 @@
+inspecting: volta_sgemm_128x64_tn
+num_static_instrs: 1296
+maxregs: 122(122)
+ERROR FAIL in kernel execution (an illegal memory access was encountered); 

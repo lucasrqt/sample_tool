@@ -1,0 +1,15 @@
+inspecting: volta_sgemm_128x64_tn
+num_static_instrs: 1296
+maxregs: 122(122)
+Injection data
+index: 320
+kernel_name: volta_sgemm_128x64_tn
+ctas: 880
+instrs: 3647115104
+ grp 0: 0 grp 1: 3079539520 grp 2: 267311968 grp 3: 26983424 grp 4: 85787904 grp 5: 187492288 grp 6: 3561327200 grp 7: 3534343776
+mask: 0xbf4f0c00
+beforeVal: 0xbf4f0c74;afterVal: 0x74
+regNo: 34
+opcode: FFMA
+pcOffset: 0x3120
+tid: 34098

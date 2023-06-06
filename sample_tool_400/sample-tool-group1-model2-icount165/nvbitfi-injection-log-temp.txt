@@ -1,0 +1,16 @@
+inspecting: volta_sgemm_128x64_tn
+num_static_instrs: 1296
+maxregs: 122(122)
+Injection data
+index: 141
+kernel_name: volta_sgemm_128x64_tn
+ctas: 220
+instrs: 2747052000
+ grp 0: 0 grp 1: 2310471680 grp 2: 201766400 grp 3: 24161280 grp 4: 66408960 grp 5: 144243680 grp 6: 2680643040 grp 7: 2656481760
+mask: 0x0
+beforeVal: 0x0;afterVal: 0x0
+regNo: -1
+opcode: NOP
+pcOffset: 0x0
+tid: -1
+Error not injected

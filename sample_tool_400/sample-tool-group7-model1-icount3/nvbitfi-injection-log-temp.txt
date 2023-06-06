@@ -1,0 +1,15 @@
+inspecting: volta_sgemm_128x64_tn
+num_static_instrs: 1296
+maxregs: 122(122)
+Injection data
+index: 265
+kernel_name: volta_sgemm_128x64_tn
+ctas: 880
+instrs: 8202980320
+ grp 0: 0 grp 1: 6906449184 grp 2: 603120640 grp 3: 68456192 grp 4: 196512160 grp 5: 428442144 grp 6: 8006468160 grp 7: 7938011968
+mask: 0x18000000
+beforeVal: 0x3ce44c38;afterVal: 0x24e44c38
+regNo: 69
+opcode: LDG
+pcOffset: 0x14d0
+tid: 79144

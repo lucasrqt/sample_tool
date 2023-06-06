@@ -1,0 +1,7 @@
+7
+2
+voidat::native::elementwise_kernel<128,2,at::native::gpu_kernel_impl<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#2}::operator()()const::{lambda()#7}::operator()()const::{lambda(float)#1}>(at::TensorIteratorBase&,at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#2}::operator()()const::{lambda()#7}::operator()()const::{lambda(float)#1}const&)::{lambda(int)#1}>(int,at::native::gpu_kernel_impl<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#2}::operator()()const::{lambda()#7}::operator()()const::{lambda(float)#1}>(at::TensorIteratorBase&,at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#2}::operator()()const::{lambda()#7}::operator()()const::{lambda(float)#1}const&)::{lambda(int)#1})
+172
+75619976
+0.10642536723139717
+0.08947365008717412
