@@ -119,7 +119,6 @@ def parse_per_kernel(
     return kernels
 
 
-# TODO
 def parse_per_kernel_bfm(
     groups: List[int],
     models: List[int],
@@ -131,15 +130,17 @@ def parse_per_kernel_bfm(
     Traverse all results folders to parse the different results depending kernel call
     """
     folder_base = f"{base_folder}/{app_name}"
-    kernels = {}
+    kernels_per_bfm = {}
 
     # fmt: off
     otpt, cls, msk, oth, = OT_STR[OUTPUT_ERR], OT_STR[CLASS_ERR], OT_STR[MASKED_ERR], OT_STR[OTHER_ERR]
 
     for i, group in enumerate(groups):
         gp = IGID_STR[group]
+        group_kernels = {}
         for model in models[i]:
             md = EM_STR[model]
+            kernel_bfm = {}
             for injection in range(1, faults_per_fm + 1):
                 dir = f"{folder_base}-group{group}-model{model}-icount{injection}"
                 stdout_diff = f"{dir}/stdout_diff.log"
@@ -147,25 +148,33 @@ def parse_per_kernel_bfm(
                 inj_info = f"{dir}/nvbitfi-injection-info.txt"
 
                 kernel_name = linecache.getline(inj_info, 3).strip()
-                if not kernel_name in kernels:
-                    kernels[kernel_name] = init_parse_kernel_dict()
+                if not kernel_name in kernel_bfm:
+                    kernel_bfm[kernel_name] = {}
+
+                if not md in kernel_bfm[kernel_name]:
+                    kernel_bfm[kernel_name][md] = init_parse_kernel_dict()
 
                 # STDOUT part
                 if os.stat(stdout_diff).st_size > 0:
                     output_errs, class_errs, other_errs = parse_stdout(
                         f"{dir}/stdout.txt"
                     )
-                    kernels[kernel_name][otpt] += output_errs
-                    kernels[kernel_name][cls] += class_errs
-                    kernels[kernel_name][oth] += other_errs
+                    kernel_bfm[kernel_name][md][otpt] += output_errs
+                    kernel_bfm[kernel_name][md][cls] += class_errs
+                    kernel_bfm[kernel_name][md][oth] += other_errs
                 else:
-                    kernels[kernel_name][msk] += 1
+                    kernel_bfm[kernel_name][md][msk] += 1
 
                 # STDERR part
                 if os.stat(stderr_diff).st_size > 0:
-                    kernels[kernel_name][oth] += other_errs
+                    kernel_bfm[kernel_name][md][oth] += other_errs
+        
+            if gp in kernels_per_bfm:
+                kernels_per_bfm[gp] |= kernel_bfm
+            else:
+                kernels_per_bfm[gp] = kernel_bfm
 
-    return kernels
+    return kernels_per_bfm
 
 
 def parse_stdout(path: str) -> Tuple[int, int, int]:
@@ -211,23 +220,31 @@ def main():
 
     groups, models = list(injections.keys()), list(injections.values())
 
-    print(f" [+] parsing results...")
-    res_stdout, res_stderr = parse_per_bfm(
-        groups, models, faults_per_fm, results_folder_path, app
-    )
+    # print(f" [+] parsing results...")
+    # res_stdout, res_stderr = parse_per_bfm(
+    #     groups, models, faults_per_fm, results_folder_path, app
+    # )
 
     print(f" [+] parsing results for kernel")
     res_kernels = parse_per_kernel(
         groups, models, faults_per_fm, results_folder_path, app
     )
 
-    df_stdout = dict_to_dataframe(res_stdout)
-    df_stderr = dict_to_dataframe(res_stderr)
-    df_stdout.to_csv(f"./{results_folder_path}/results_stdout.csv")
-    df_stderr.to_csv(f"./{results_folder_path}/results_stderr.csv")
+    print(f" [+] parsing results for kernel")
+    res_ker_bfm = parse_per_kernel_bfm(
+        groups, models, faults_per_fm, results_folder_path, app
+    )
+
+    # df_stdout = dict_to_dataframe(res_stdout)
+    # df_stderr = dict_to_dataframe(res_stderr)
+    # df_stdout.to_csv(f"./{results_folder_path}/results_stdout.csv")
+    # df_stderr.to_csv(f"./{results_folder_path}/results_stderr.csv")
 
     df_kernels = pd.DataFrame.from_dict(res_kernels, orient="index")
     df_kernels.to_csv(f"./{results_folder_path}/results_kernel.csv")
+
+    # df_kbfm = dict_to_dataframe(res_ker_bfm)
+    # df_kbfm.to_csv(f"./{results_folder_path}/results_kernel_bfm.csv")
 
 
 if __name__ == "__main__":
