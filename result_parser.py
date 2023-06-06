@@ -51,17 +51,23 @@ def parse_per_bfm(
                 stderr_diff = f"{dir}/stderr_diff.log"
 
                 # STDOUT part
-                if os.stat(stdout_diff).st_size > 0:                
-                    output_errs, class_errs, other_errs = parse_stdout(
-                        f"{dir}/stdout.txt"
-                    )
-                    
-                    res_stdout[gp][md][otpt] += output_errs
-                    res_stdout[gp][md][cls] += class_errs
-                    res_stdout[gp][md][oth] += other_errs
+                try:
+                    if os.stat(stdout_diff).st_size > 0:                
+                        output_errs, class_errs, other_errs = parse_stdout(
+                            f"{dir}/stdout.txt"
+                        )
+                        
+                        res_stdout[gp][md][otpt] += output_errs
+                        res_stdout[gp][md][cls] += class_errs
+                        res_stdout[gp][md][oth] += other_errs
+                except:
+                    crashes+=1
 
                 # STDERR part
-                if os.stat(stderr_diff).st_size > 0:
+                try:
+                    if os.stat(stderr_diff).st_size > 0:
+                        crashes += 1
+                except:
                     crashes += 1
 
             res_stderr[gp][md] = {"crashes": crashes}
@@ -102,19 +108,25 @@ def parse_per_kernel(
                     kernels[kernel_name] = init_parse_kernel_dict()
 
                 # STDOUT part
-                if os.stat(stdout_diff).st_size > 0:
-                    output_errs, class_errs, other_errs = parse_stdout(
-                        f"{dir}/stdout.txt"
-                    )
-                    kernels[kernel_name][otpt] += output_errs
-                    kernels[kernel_name][cls] += class_errs
-                    kernels[kernel_name][oth] += other_errs
-                else:
-                    kernels[kernel_name][msk] += 1
+                try:
+                    if os.stat(stdout_diff).st_size > 0:
+                        output_errs, class_errs, other_errs = parse_stdout(
+                            f"{dir}/stdout.txt"
+                        )
+                        kernels[kernel_name][otpt] += output_errs
+                        kernels[kernel_name][cls] += class_errs
+                        kernels[kernel_name][oth] += other_errs
+                    else:
+                        kernels[kernel_name][msk] += 1
+                except:
+                    kernels[kernel_name][oth] += 1
 
                 # STDERR part
-                if os.stat(stderr_diff).st_size > 0:
-                    kernels[kernel_name][oth] += other_errs
+                try:
+                    if os.stat(stderr_diff).st_size > 0:
+                        kernels[kernel_name][oth] += 1
+                except:
+                    kernels[kernel_name][oth] += 1
 
     return kernels
 
@@ -155,20 +167,26 @@ def parse_per_kernel_bfm(
                     kernel_bfm[kernel_name][md] = init_parse_kernel_dict()
 
                 # STDOUT part
-                if os.stat(stdout_diff).st_size > 0:
-                    output_errs, class_errs, other_errs = parse_stdout(
-                        f"{dir}/stdout.txt"
-                    )
-                    kernel_bfm[kernel_name][md][otpt] += output_errs
-                    kernel_bfm[kernel_name][md][cls] += class_errs
-                    kernel_bfm[kernel_name][md][oth] += other_errs
-                else:
-                    kernel_bfm[kernel_name][md][msk] += 1
+                try:
+                    if os.stat(stdout_diff).st_size > 0:
+                        output_errs, class_errs, other_errs = parse_stdout(
+                            f"{dir}/stdout.txt"
+                        )
+                        kernel_bfm[kernel_name][md][otpt] += output_errs
+                        kernel_bfm[kernel_name][md][cls] += class_errs
+                        kernel_bfm[kernel_name][md][oth] += other_errs
+                    else:
+                        kernel_bfm[kernel_name][md][msk] += 1
+                except:
+                    kernel_bfm[kernel_name][md][oth] += 1
 
                 # STDERR part
-                if os.stat(stderr_diff).st_size > 0:
-                    kernel_bfm[kernel_name][md][oth] += other_errs
-        
+                try:
+                    if os.stat(stderr_diff).st_size > 0:
+                        kernel_bfm[kernel_name][md][oth] += other_errs
+                except:
+                    kernel_bfm[kernel_name][md][oth] += 1
+
             if gp in kernels_per_bfm:
                 kernels_per_bfm[gp] |= kernel_bfm
             else:
@@ -210,7 +228,7 @@ def dict_to_dataframe(results: dict) -> pd.DataFrame:
 
 
 def main():
-    results_folder_path = "sample_tool"
+    results_folder_path = "sample_tool_400"
     faults_per_fm = 100
     injections = {
         G_FP32: [FLIP_SINGLE_BIT, FLIP_TWO_BITS, RANDOM_VALUE, ZERO_VALUE],
@@ -220,25 +238,25 @@ def main():
 
     groups, models = list(injections.keys()), list(injections.values())
 
-    # print(f" [+] parsing results...")
-    # res_stdout, res_stderr = parse_per_bfm(
-    #     groups, models, faults_per_fm, results_folder_path, app
-    # )
+    print(f" [+] parsing results...")
+    res_stdout, res_stderr = parse_per_bfm(
+        groups, models, faults_per_fm, results_folder_path, app
+    )
 
     print(f" [+] parsing results for kernel")
     res_kernels = parse_per_kernel(
         groups, models, faults_per_fm, results_folder_path, app
     )
 
-    print(f" [+] parsing results for kernel")
+    print(f" [+] deep parsing results for kernel")
     res_ker_bfm = parse_per_kernel_bfm(
         groups, models, faults_per_fm, results_folder_path, app
     )
 
-    # df_stdout = dict_to_dataframe(res_stdout)
-    # df_stderr = dict_to_dataframe(res_stderr)
-    # df_stdout.to_csv(f"./{results_folder_path}/results_stdout.csv")
-    # df_stderr.to_csv(f"./{results_folder_path}/results_stderr.csv")
+    df_stdout = dict_to_dataframe(res_stdout)
+    df_stderr = dict_to_dataframe(res_stderr)
+    df_stdout.to_csv(f"./{results_folder_path}/results_stdout.csv")
+    df_stderr.to_csv(f"./{results_folder_path}/results_stderr.csv")
 
     df_kernels = pd.DataFrame.from_dict(res_kernels, orient="index")
     df_kernels.to_csv(f"./{results_folder_path}/results_kernel.csv")
