@@ -1,7 +1,0 @@
-1
-3
-voidattention_kernel_batched<AttentionKernel<float,cutlass::arch::Sm70,true,32l,128l,true>>(AttentionKernel<float,cutlass::arch::Sm70,true,32l,128l,true>::Params)
-162
-3705756854
-0.5713871383602613
-0.2736365260919065

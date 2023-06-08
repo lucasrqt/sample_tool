@@ -1,0 +1,15 @@
+inspecting: voidattention_kernel_batched<AttentionKernel<float,cutlass::arch::Sm70,true,64l,64l,true>>(AttentionKernel<float,cutlass::arch::Sm70,true,64l,64l,true>::Params)
+num_static_instrs: 4496
+maxregs: 166(166)
+Injection data
+index: 36
+kernel_name: voidattention_kernel_batched<AttentionKernel<float,cutlass::arch::Sm70,true,64l,64l,true>>(AttentionKernel<float,cutlass::arch::Sm70,true,64l,64l,true>::Params)
+ctas: 48
+instrs: 109845048
+ grp 0: 0 grp 1: 75114844 grp 2: 8488596 grp 3: 5396676 grp 4: 3532480 grp 5: 17312452 grp 6: 106312568 grp 7: 100915892
+mask: 0x100000
+beforeVal: 0x900;afterVal: 0x100900
+regNo: 15
+opcode: MOV
+pcOffset: 0x1970
+tid: 5109

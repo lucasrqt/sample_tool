@@ -1,7 +1,0 @@
-7
-2
-voidat::native::(anonymousnamespace)::CatArrayBatchedCopy<float,unsignedint,3,64,64>(float*,at::native::(anonymousnamespace)::CatArrInputTensorMetadata<float,unsignedint,64,64>,at::native::(anonymousnamespace)::TensorSizeStride<unsignedint,4u>,int,unsignedint)
-3
-66888931
-0.5978245179148787
-0.8429180712170441

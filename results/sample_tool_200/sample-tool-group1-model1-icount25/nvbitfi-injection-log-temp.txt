@@ -1,0 +1,15 @@
+inspecting: voidat::native::(anonymousnamespace)::vectorized_layer_norm_kernel<float,float>(int,float,floatconst*,floatconst*,floatconst*,float*,float*,float*)
+num_static_instrs: 1208
+maxregs: 42(42)
+Injection data
+index: 19
+kernel_name: voidat::native::(anonymousnamespace)::vectorized_layer_norm_kernel<float,float>(int,float,floatconst*,floatconst*,floatconst*,float*,float*,float*)
+ctas: 197
+instrs: 9577728
+ grp 0: 0 grp 1: 3028895 grp 2: 314709 grp 3: 1029052 grp 4: 1277873 grp 5: 3927199 grp 6: 8299855 grp 7: 7270803
+mask: 0xc00
+beforeVal: 0x42c05f21;afterVal: 0x42c05321
+regNo: 7
+opcode: FFMA
+pcOffset: 0x2680
+tid: 7359
