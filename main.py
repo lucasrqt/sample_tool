@@ -8,6 +8,22 @@ import configs
 import argparse
 import logging
 import timm
+import hardened_identity
+
+
+def replace_identity(module, name):
+    """Recursively put desired module in nn.module module."""
+    # go through all attributes of module nn.module (e.g. network or layer) and put batch norms if present
+    for attr_str in dir(module):
+        target_attr = getattr(module, attr_str)
+        if type(target_attr) == torch.nn.Identity:
+            print("replaced: ", name, attr_str)
+            new_identity = hardened_identity.HardenedIdentity()
+            setattr(module, attr_str, new_identity)
+
+    # iterate through immediate child modules. Note, the recursion is done by our code no need to use named_modules()
+    for name, immediate_child_module in module.named_children():
+        replace_identity(immediate_child_module, name)
 
 
 def equal(rhs: torch.Tensor, lhs: torch.Tensor, threshold: float = 0) -> bool:
@@ -75,7 +91,7 @@ def main():
 
     logger = logging.getLogger()
 
-    # model init
+    # model dependencies init
     transforms = [
         T.Resize(configs.IMG_SIZE),
         T.ToTensor(),
