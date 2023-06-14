@@ -1,0 +1,7 @@
+7
+2
+voidat::native::(anonymousnamespace)::vectorized_layer_norm_kernel<float,float>(int,float,floatconst*,floatconst*,floatconst*,float*,float*,float*)
+59
+7471897
+0.0073319027796151515
+0.7327557359347654

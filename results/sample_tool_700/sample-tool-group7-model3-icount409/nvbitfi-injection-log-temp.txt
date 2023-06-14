@@ -1,0 +1,15 @@
+inspecting: volta_sgemm_128x32_tn
+num_static_instrs: 640
+maxregs: 57(57)
+Injection data
+index: 15
+kernel_name: volta_sgemm_128x32_tn
+ctas: 630
+instrs: 8246912
+ grp 0: 0 grp 1: 0 grp 2: 336432 grp 3: 1348128 grp 4: 168320 grp 5: 6394032 grp 6: 8078592 grp 7: 6730464
+mask: 0x0
+beforeVal: 0x0;afterVal: 0x0
+regNo: 3
+opcode: SHF
+pcOffset: 0x8f0
+tid: 46916

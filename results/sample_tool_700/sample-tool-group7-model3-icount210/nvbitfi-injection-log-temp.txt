@@ -1,0 +1,15 @@
+inspecting: volta_sgemm_64x32_sliced1x4_tn
+num_static_instrs: 888
+maxregs: 82(82)
+Injection data
+index: 102
+kernel_name: volta_sgemm_64x32_sliced1x4_tn
+ctas: 924
+instrs: 255730872
+ grp 0: 0 grp 1: 163351872 grp 2: 29464920 grp 3: 13936512 grp 4: 12215712 grp 5: 36761856 grp 6: 243515160 grp 7: 229578648
+mask: 0x698
+beforeVal: 0x698;afterVal: 0x0
+regNo: 57
+opcode: SHF
+pcOffset: 0x2770
+tid: 42707

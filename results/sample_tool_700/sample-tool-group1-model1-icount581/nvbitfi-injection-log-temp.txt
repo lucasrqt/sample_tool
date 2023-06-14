@@ -1,0 +1,16 @@
+inspecting: volta_sgemm_64x32_sliced1x4_tn
+num_static_instrs: 888
+maxregs: 82(82)
+Injection data
+index: 27
+kernel_name: volta_sgemm_64x32_sliced1x4_tn
+ctas: 336
+instrs: 238146720
+ grp 0: 0 grp 1: 137625600 grp 2: 28091904 grp 3: 19370496 grp 4: 13164192 grp 5: 39894528 grp 6: 224982528 grp 7: 205612032
+mask: 0x0
+beforeVal: 0x0;afterVal: 0x0
+regNo: -1
+opcode: NOP
+pcOffset: 0x0
+tid: -1
+Error not injected

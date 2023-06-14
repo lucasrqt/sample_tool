@@ -1,0 +1,15 @@
+inspecting: volta_sgemm_64x32_sliced1x4_tn
+num_static_instrs: 888
+maxregs: 82(82)
+Injection data
+index: 32
+kernel_name: volta_sgemm_64x32_sliced1x4_tn
+ctas: 924
+instrs: 778929368
+ grp 0: 0 grp 1: 496358080 grp 2: 82876688 grp 3: 41651648 grp 4: 39829808 grp 5: 118213144 grp 6: 739099560 grp 7: 697447912
+mask: 0x3ce32ec0
+beforeVal: 0x3ce32eb8;afterVal: 0x78
+regNo: 66
+opcode: FADD
+pcOffset: 0x3550
+tid: 186200

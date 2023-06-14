@@ -1,0 +1,7 @@
+1
+3
+voidat::native::vectorized_elementwise_kernel<4,at::native::GeluCUDAKernelImpl(at::TensorIteratorBase&,at::native::GeluType)::{lambda()#2}::operator()()const::{lambda()#2}::operator()()const::{lambda(float)#1},at::detail::Array<char*,2>>(int,at::native::GeluCUDAKernelImpl(at::TensorIteratorBase&,at::native::GeluType)::{lambda()#2}::operator()()const::{lambda()#2}::operator()()const::{lambda(float)#1},at::detail::Array<char*,2>)
+81
+2946442
+0.0009762642806642186
+0.024317488061762926

@@ -1,0 +1,15 @@
+inspecting: volta_sgemm_64x32_sliced1x4_tn
+num_static_instrs: 888
+maxregs: 82(82)
+Injection data
+index: 122
+kernel_name: volta_sgemm_64x32_sliced1x4_tn
+ctas: 924
+instrs: 443059332
+ grp 0: 0 grp 1: 282857856 grp 2: 48986432 grp 3: 23968736 grp 4: 21878228 grp 5: 65368080 grp 6: 421181104 grp 7: 397212368
+mask: 0x30
+beforeVal: 0x7f92;afterVal: 0x7fa2
+regNo: 43
+opcode: IADD3
+pcOffset: 0x12f0
+tid: 98085

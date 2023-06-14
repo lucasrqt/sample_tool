@@ -1,0 +1,15 @@
+inspecting: volta_sgemm_64x32_sliced1x4_tn
+num_static_instrs: 888
+maxregs: 82(82)
+Injection data
+index: 27
+kernel_name: volta_sgemm_64x32_sliced1x4_tn
+ctas: 336
+instrs: 5522976
+ grp 0: 0 grp 1: 25728 grp 2: 444384 grp 3: 1014848 grp 4: 149088 grp 5: 3888928 grp 6: 5373888 grp 7: 4359040
+mask: 0xc00000
+beforeVal: 0x0;afterVal: 0xc00000
+regNo: 22
+opcode: CS2R
+pcOffset: 0xb60
+tid: 17890

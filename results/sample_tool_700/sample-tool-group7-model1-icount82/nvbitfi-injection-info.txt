@@ -1,0 +1,7 @@
+7
+1
+voidat::native::elementwise_kernel<128,2,at::native::gpu_kernel_impl<at::native::CUDAFunctor_add<float>>(at::TensorIteratorBase&,at::native::CUDAFunctor_add<float>const&)::{lambda(int)#1}>(int,at::native::gpu_kernel_impl<at::native::CUDAFunctor_add<float>>(at::TensorIteratorBase&,at::native::CUDAFunctor_add<float>const&)::{lambda(int)#1})
+1
+2372692
+0.9860739608641166
+0.2931927568853999

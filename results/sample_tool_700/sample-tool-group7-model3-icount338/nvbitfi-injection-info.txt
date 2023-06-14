@@ -1,0 +1,7 @@
+7
+3
+voidgemv2T_kernel_val<int,int,float,float,float,float,128,16,4,4,false,true,cublasGemvParams<cublasGemvTensorStridedBatched<floatconst>,cublasGemvTensorStridedBatched<floatconst>,cublasGemvTensorStridedBatched<float>,float>>(cublasGemvParams<cublasGemvTensorStridedBatched<floatconst>,cublasGemvTensorStridedBatched<floatconst>,cublasGemvTensorStridedBatched<float>,float>,float,float)
+125
+2419287
+0.9519355930844138
+0.9668813052632581

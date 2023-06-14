@@ -1,0 +1,15 @@
+inspecting: volta_sgemm_128x32_tn
+num_static_instrs: 640
+maxregs: 57(57)
+Injection data
+index: 40
+kernel_name: volta_sgemm_128x32_tn
+ctas: 840
+instrs: 337926105
+ grp 0: 0 grp 1: 216694944 grp 2: 44109812 grp 3: 18133536 grp 4: 14499657 grp 5: 44488156 grp 6: 323426448 grp 7: 305292912
+mask: 0x3
+beforeVal: 0xace264e4;afterVal: 0xace264e7
+regNo: 24
+opcode: LEA
+pcOffset: 0x25d0
+tid: 28793

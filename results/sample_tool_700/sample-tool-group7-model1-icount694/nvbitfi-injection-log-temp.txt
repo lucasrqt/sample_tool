@@ -1,0 +1,4 @@
+inspecting: voidat::native::(anonymousnamespace)::CatArrayBatchedCopy<float,unsignedint,3,64,64>(float*,at::native::(anonymousnamespace)::CatArrInputTensorMetadata<float,unsignedint,64,64>,at::native::(anonymousnamespace)::TensorSizeStride<unsignedint,4u>,int,unsignedint)
+num_static_instrs: 192
+maxregs: 32(32)
+ERROR FAIL in kernel execution (an illegal memory access was encountered); 

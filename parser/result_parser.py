@@ -14,12 +14,12 @@ def main():
     parser = Parser()
 
     # sample tool app init
-    results_folder_path = f"{BASE_DIR}/sample_tool_200"
+    results_folder_path = f"{BASE_DIR}/sample_tool_warp_40"
     injections = {
-        G_FP32: [FLIP_SINGLE_BIT, FLIP_TWO_BITS, RANDOM_VALUE, ZERO_VALUE],
-        G_GP: [FLIP_SINGLE_BIT, FLIP_TWO_BITS, RANDOM_VALUE, ZERO_VALUE],
+        G_GP: [FLIP_SINGLE_BIT, ZERO_VALUE, WARP_ZERO_VALUE],
+        G_FP32: [FLIP_SINGLE_BIT, ZERO_VALUE, WARP_ZERO_VALUE],
     }
-    sample_tool = App("sample-tool", results_folder_path, 200, injections)
+    sample_tool = App("sample-tool", results_folder_path, 40, injections)
 
     print(f" [+] parsing results...")
     res_stdout, res_stderr = parser.parse_per_bfm(sample_tool)

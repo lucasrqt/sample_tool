@@ -1,0 +1,15 @@
+inspecting: voidat::native::vectorized_elementwise_kernel<4,at::native::GeluCUDAKernelImpl(at::TensorIteratorBase&,at::native::GeluType)::{lambda()#2}::operator()()const::{lambda()#2}::operator()()const::{lambda(float)#1},at::detail::Array<char*,2>>(int,at::native::GeluCUDAKernelImpl(at::TensorIteratorBase&,at::native::GeluType)::{lambda()#2}::operator()()const::{lambda()#2}::operator()()const::{lambda(float)#1},at::detail::Array<char*,2>)
+num_static_instrs: 320
+maxregs: 28(28)
+Injection data
+index: 11
+kernel_name: voidat::native::vectorized_elementwise_kernel<4,at::native::GeluCUDAKernelImpl(at::TensorIteratorBase&,at::native::GeluType)::{lambda()#2}::operator()()const::{lambda()#2}::operator()()const::{lambda(float)#1},at::detail::Array<char*,2>>(int,at::native::GeluCUDAKernelImpl(at::TensorIteratorBase&,at::native::GeluType)::{lambda()#2}::operator()()const::{lambda()#2}::operator()()const::{lambda(float)#1},at::detail::Array<char*,2>)
+ctas: 1182
+instrs: 13333637
+ grp 0: 0 grp 1: 9522492 grp 2: 151296 grp 3: 715168 grp 4: 60768 grp 5: 2883913 grp 6: 13272869 grp 7: 12557701
+mask: 0x8
+beforeVal: 0x3f38a33e;afterVal: 0x3f38a336
+regNo: 2
+opcode: FMUL
+pcOffset: 0xe0
+tid: 143804

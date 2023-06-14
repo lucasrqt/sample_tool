@@ -1,0 +1,15 @@
+inspecting: volta_sgemm_128x32_tn
+num_static_instrs: 640
+maxregs: 57(57)
+Injection data
+index: 90
+kernel_name: volta_sgemm_128x32_tn
+ctas: 840
+instrs: 830312358
+ grp 0: 0 grp 1: 536233856 grp 2: 104594360 grp 3: 40910592 grp 4: 37866894 grp 5: 110706656 grp 6: 792445464 grp 7: 751534872
+mask: 0x4
+beforeVal: 0xecc;afterVal: 0xec8
+regNo: 26
+opcode: LOP3
+pcOffset: 0x1420
+tid: 182463

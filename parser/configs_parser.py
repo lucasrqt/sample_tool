@@ -9,15 +9,18 @@ BASE_DIR = "/home/lucasroquet/sample-tool/results/"
 #######################################################################
 G_FP64 = 0
 G_FP32 = 1
-G_LD = 2
-G_PR = 3
-G_NODEST = 4  # not really an igid
-G_OTHERS = 5
-G_GPPR = 6  # instructions that write to either a GPR or a PR register
-G_GP = 7  # instructions that write to a GPR register
-NUM_INST_GROUPS = 8
+G_FP16 = 2  # Fernando Fernandes, 10/2022 New fault sites
+G_MMA = 3
+G_LD = 4
+G_PR = 5
+G_NODEST = 6  # not really an igid
+G_OTHERS = 7
+G_GPPR = 8  # instructions that write to either a GPR or a PR register
+G_GP = 9  # instructions that write to a GPR register
+NUM_INST_GROUPS = 10
 
-IGID_STR = ["fp64", "fp32", "ld", "pr", "nodest", "others", "gppr", "gp"]
+# Fernando Fernandes, 10/2022 New fault sites
+IGID_STR = ["fp64", "fp32", "fp16", "mma", "ld", "pr", "nodest", "others", "gppr", "gp"]
 
 
 #######################################################################
@@ -28,8 +31,18 @@ FLIP_SINGLE_BIT = 0
 FLIP_TWO_BITS = 1
 RANDOM_VALUE = 2
 ZERO_VALUE = 3
-
-EM_STR = ["FLIP_SINGLE_BIT", "FLIP_TWO_BITS", "RANDOM_VALUE", "ZERO_VALUE"]
+# Fernando Fernandes, 10/2022
+# Add warp wide fault models
+WARP_RANDOM_VALUE = 4
+WARP_ZERO_VALUE = 5
+EM_STR = [
+    "FLIP_SINGLE_BIT",
+    "FLIP_TWO_BITS",
+    "RANDOM_VALUE",
+    "ZERO_VALUE",
+    "WARP_RANDOM_VALUE",
+    "WARP_ZERO_VALUE",
+]
 
 
 #######################################################################

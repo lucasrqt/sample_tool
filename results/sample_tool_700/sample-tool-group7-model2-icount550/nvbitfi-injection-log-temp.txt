@@ -1,0 +1,15 @@
+inspecting: volta_sgemm_64x32_sliced1x4_tn
+num_static_instrs: 888
+maxregs: 82(82)
+Injection data
+index: 17
+kernel_name: volta_sgemm_64x32_sliced1x4_tn
+ctas: 336
+instrs: 112595362
+ grp 0: 0 grp 1: 65296672 grp 2: 13989952 grp 3: 8911200 grp 4: 5540610 grp 5: 18856928 grp 6: 107054752 grp 7: 98143552
+mask: 0x9ac20100
+beforeVal: 0x0;afterVal: 0x9ac20100
+regNo: 63
+opcode: MOV
+pcOffset: 0x240
+tid: 50272

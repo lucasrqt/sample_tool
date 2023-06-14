@@ -9,39 +9,6 @@ import argparse
 import logging
 import timm
 
-transforms = [
-    T.Resize(configs.IMG_SIZE),
-    T.ToTensor(),
-    T.Normalize(configs.NORMALIZE_MEAN, configs.NORMALIZE_STD),
-]
-
-transforms = T.Compose(transforms)
-
-# initializing the dataset
-test_set = ImageNet(
-    root=configs.DATA_PATH,
-    transform=transforms,
-    split="val",
-)
-
-# initializing the dataloader
-data_loader = DataLoader(test_set, batch_size=1)
-
-# image labels
-imagenet_labels = dict(
-    enumerate(open(f"{configs.BASE_DIR}/data/ilsvrc2012_wordnet_lemmas.txt"))
-)
-
-### --
-# model initialization, Vision Transformer
-model = timm.create_model(configs.VIT_BASE_PATCH16_224, pretrained=True)
-
-# putting model on GPU
-model.to("cuda")
-
-# setting mode for inference
-model.eval()
-
 
 def equal(rhs: torch.Tensor, lhs: torch.Tensor, threshold: float = 0) -> bool:
     """Compare based or not in a threshold, if threshold is none then it is equal comparison"""
@@ -107,6 +74,40 @@ def main():
     )
 
     logger = logging.getLogger()
+
+    # model init
+    transforms = [
+        T.Resize(configs.IMG_SIZE),
+        T.ToTensor(),
+        T.Normalize(configs.NORMALIZE_MEAN, configs.NORMALIZE_STD),
+    ]
+
+    transforms = T.Compose(transforms)
+
+    # initializing the dataset
+    test_set = ImageNet(
+        root=configs.DATA_PATH,
+        transform=transforms,
+        split="val",
+    )
+
+    # initializing the dataloader
+    data_loader = DataLoader(test_set, batch_size=1)
+
+    # image labels
+    imagenet_labels = dict(
+        enumerate(open(f"{configs.BASE_DIR}/data/ilsvrc2012_wordnet_lemmas.txt"))
+    )
+
+    ### --
+    # model initialization, Vision Transformer
+    model = timm.create_model(configs.VIT_BASE_PATCH16_224, pretrained=True)
+
+    # putting model on GPU
+    model.to("cuda")
+
+    # setting mode for inference
+    model.eval()
 
     data_iter = iter(data_loader)
 

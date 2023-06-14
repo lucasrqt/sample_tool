@@ -1,0 +1,15 @@
+inspecting: voidattention_kernel_batched<AttentionKernel<float,cutlass::arch::Sm70,true,64l,64l,true>>(AttentionKernel<float,cutlass::arch::Sm70,true,64l,64l,true>::Params)
+num_static_instrs: 4496
+maxregs: 166(166)
+Injection data
+index: 116
+kernel_name: voidattention_kernel_batched<AttentionKernel<float,cutlass::arch::Sm70,true,64l,64l,true>>(AttentionKernel<float,cutlass::arch::Sm70,true,64l,64l,true>::Params)
+ctas: 48
+instrs: 133282780
+ grp 0: 0 grp 1: 91349864 grp 2: 10270300 grp 3: 6573452 grp 4: 4298656 grp 5: 20790508 grp 6: 128984124 grp 7: 122410672
+mask: 0x2000000
+beforeVal: 0x402475dd;afterVal: 0x422475dd
+regNo: 95
+opcode: FFMA
+pcOffset: 0xe8b0
+tid: 5877

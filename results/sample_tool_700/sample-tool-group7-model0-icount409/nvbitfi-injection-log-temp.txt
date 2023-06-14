@@ -1,0 +1,15 @@
+inspecting: volta_sgemm_64x32_sliced1x4_tn
+num_static_instrs: 888
+maxregs: 82(82)
+Injection data
+index: 112
+kernel_name: volta_sgemm_64x32_sliced1x4_tn
+ctas: 924
+instrs: 471325736
+ grp 0: 0 grp 1: 297320480 grp 2: 51996896 grp 3: 27111072 grp 4: 23683016 grp 5: 71214272 grp 6: 447642720 grp 7: 420531648
+mask: 0x1000
+beforeVal: 0x4;afterVal: 0x1004
+regNo: 56
+opcode: BMSK
+pcOffset: 0x25b0
+tid: 111450

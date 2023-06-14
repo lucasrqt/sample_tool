@@ -1,0 +1,15 @@
+inspecting: volta_sgemm_128x32_tn
+num_static_instrs: 640
+maxregs: 57(57)
+Injection data
+index: 90
+kernel_name: volta_sgemm_128x32_tn
+ctas: 840
+instrs: 182717560
+ grp 0: 0 grp 1: 126423968 grp 2: 21721896 grp 3: 4445856 grp 4: 7488544 grp 5: 22637296 grp 6: 175229016 grp 7: 170783160
+mask: 0x968baa00
+beforeVal: 0x3a8866c3;afterVal: 0xac03ccc3
+regNo: 36
+opcode: LDS
+pcOffset: 0xd20
+tid: 31016

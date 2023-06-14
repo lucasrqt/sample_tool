@@ -1,0 +1,7 @@
+7
+0
+voidimplicit_convolve_sgemm<float,float,1024,5,5,3,3,3,1,false,false,true>(int,int,int,floatconst*,int,float*,floatconst*,kernel_conv_params,unsignedlonglong,int,float,float,int,floatconst*,floatconst*,bool,int,int)
+0
+52085620
+0.02988532171910474
+0.4108853087164984

@@ -1,0 +1,15 @@
+inspecting: volta_sgemm_128x32_tn
+num_static_instrs: 640
+maxregs: 57(57)
+Injection data
+index: 100
+kernel_name: volta_sgemm_128x32_tn
+ctas: 840
+instrs: 311721632
+ grp 0: 0 grp 1: 211608128 grp 2: 38395316 grp 3: 11480704 grp 4: 12782928 grp 5: 37454556 grp 6: 298938704 grp 7: 287458000
+mask: 0x3
+beforeVal: 0x3;afterVal: 0x0
+regNo: 41
+opcode: BMSK
+pcOffset: 0x1820
+tid: 41359

@@ -1,0 +1,15 @@
+inspecting: volta_sgemm_128x32_tn
+num_static_instrs: 640
+maxregs: 57(57)
+Injection data
+index: 5
+kernel_name: volta_sgemm_128x32_tn
+ctas: 630
+instrs: 631298708
+ grp 0: 0 grp 1: 404209984 grp 2: 85592244 grp 3: 35984880 grp 4: 27229844 grp 5: 78281756 grp 6: 604068864 grp 7: 568083984
+mask: 0x400
+beforeVal: 0x6b;afterVal: 0x46b
+regNo: 36
+opcode: S2R
+pcOffset: 0x1560
+tid: 115819
