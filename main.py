@@ -17,7 +17,7 @@ def replace_identity(module, name):
     for attr_str in dir(module):
         target_attr = getattr(module, attr_str)
         if type(target_attr) == torch.nn.Identity:
-            print("replaced: ", name, attr_str)
+            # print("replaced: ", name, attr_str)
             new_identity = hardened_identity.HardenedIdentity()
             setattr(module, attr_str, new_identity)
 
@@ -124,6 +124,9 @@ def main():
 
     # setting mode for inference
     model.eval()
+
+    # REPLACING IDENTITY LAYER
+    replace_identity(model, "model")
 
     data_iter = iter(data_loader)
 
