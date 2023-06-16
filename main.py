@@ -9,6 +9,7 @@ import argparse
 import logging
 import timm
 import hardened_identity
+import profiling
 
 
 def replace_identity(module, name):
@@ -108,7 +109,7 @@ def main():
     )
 
     # initializing the dataloader
-    data_loader = DataLoader(test_set, batch_size=1)
+    data_loader = DataLoader(test_set, batch_size=400)
 
     # image labels
     imagenet_labels = dict(
@@ -128,23 +129,35 @@ def main():
     # REPLACING IDENTITY LAYER
     replace_identity(model, "model")
 
+    # PROFILING INIT
+    profiler = profiling.Profiling()
+
+    handles_hook = profiler.register_hook(model, hardened_identity.HardenedIdentity)
+
     data_iter = iter(data_loader)
 
+    min, max = 1024, 0
+
     # inference w/ dataloader
-    for _i in range(configs.DEFAULT_INDEX + 1):
+    for batch_idx, (image, label) in enumerate(data_loader):
         image, label = next(data_iter)
 
-    # puting image on GPU
-    image = image.to("cuda")
+        # puting image on GPU
+        image = image.to("cuda")
 
-    # getting the prediction
-    output = model(image)
+        # getting the prediction
+        output = model(image)
 
-    # moving output to CPU
-    output_cpu = output.to("cpu")
+        # moving output to CPU
+        output_cpu = output.to("cpu")
+
+        minmin, minmax, maxmin, maxmax = profiling.get_deltas(profiler.get_min_max())
+        pred = get_top_k_labels(output, top_k=configs.TOP_K_MAX).item()
+        print(minmin, minmax, maxmin, maxmax, pred)
 
     if not args.loadsave:
         pred = get_top_k_labels(output, top_k=configs.TOP_K_MAX).item()
+        print(pred)
         if pred != label.item():
             print(f" [-] wrong classification value {pred}, expected {label.item()}")
 
