@@ -4,11 +4,10 @@ import torch
 from torchvision.datasets import ImageNet
 from torch.utils.data import DataLoader
 import torchvision.transforms as T
-import configs
+import configs, hardened_identity
 import argparse
 import logging
 import timm
-import hardened_identity
 
 
 def replace_identity(module, name):
@@ -91,7 +90,7 @@ def main():
 
     logger = logging.getLogger()
 
-    # model dependencies init
+    # model init
     transforms = [
         T.Resize(configs.IMG_SIZE),
         T.ToTensor(),
@@ -134,14 +133,15 @@ def main():
     for _i in range(configs.DEFAULT_INDEX + 1):
         image, label = next(data_iter)
 
-    # puting image on GPU
-    image = image.to("cuda")
+    with torch.no_grad():
+        # puting image on GPU
+        image = image.to("cuda")
 
-    # getting the prediction
-    output = model(image)
+        # getting the prediction
+        output = model(image)
 
-    # moving output to CPU
-    output_cpu = output.to("cpu")
+        # moving output to CPU
+        output_cpu = output.to("cpu")
 
     if not args.loadsave:
         pred = get_top_k_labels(output, top_k=configs.TOP_K_MAX).item()
