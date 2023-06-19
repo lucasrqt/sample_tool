@@ -115,14 +115,15 @@ def main():
     for _i in range(configs.DEFAULT_INDEX + 1):
         image, label = next(data_iter)
 
-    # puting image on GPU
-    image = image.to("cuda")
+    with torch.no_grad():
+        # puting image on GPU
+        image = image.to("cuda")
 
-    # getting the prediction
-    output = model(image)
+        # getting the prediction
+        output = model(image)
 
-    # moving output to CPU
-    output_cpu = output.to("cpu")
+        # moving output to CPU
+        output_cpu = output.to("cpu")
 
     if not args.loadsave:
         pred = get_top_k_labels(output, top_k=configs.TOP_K_MAX).item()
