@@ -20,4 +20,13 @@ DEFAULT_INDEX = 493
 
 # MODEL NAMES
 VIT_LARGE_PATCH14_CLIP_224 = "vit_large_patch14_clip_224.laion2b_ft_in12k_in1k"
+
 VIT_BASE_PATCH16_224 = "vit_base_patch16_224"
+VIT_BASE_PATCH16_384 = "vit_base_patch16_384"
+
+EVA_BASE_PATCH14_448_MIM = "eva02_base_patch14_448.mim_in22k_ft_in22k_in1k"
+
+VIT_HUGE_PATCH14_CLIP_336 = "vit_huge_patch14_clip_336.laion2b_ft_in12k_in1k"
+VIT_HUGE_PATCH14_CLIP_224 = "vit_huge_patch14_clip_224.laion2b_ft_in12k_in1k"
+
+VIT_BASE_PATCH32_224_SAM = "vit_base_patch32_224.sam_in1k"
