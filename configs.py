@@ -5,12 +5,6 @@ BASE_DIR = os.path.dirname(os.path.realpath(__file__))
 OUTPUT_PATH = "data/gold_save.pt"
 LOG_FILENAME = "log/sample-tool.log"
 
-# image transformation parameters
-# IMG_SIZE = (518, 518)  # vit h 14 expects 518*518 resolution
-IMG_SIZE = (224, 224)
-NORMALIZE_MEAN = (0.5, 0.5, 0.5)
-NORMALIZE_STD = (0.5, 0.5, 0.5)
-
 # top_k max
 TOP_K_MAX = 1
 

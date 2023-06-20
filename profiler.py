@@ -24,14 +24,21 @@ def replace_identity(module, name):
 
 
 def main():
-    # model dependencies init
-    transforms = [
-        T.Resize(configs.IMG_SIZE),
-        T.ToTensor(),
-        T.Normalize(configs.NORMALIZE_MEAN, configs.NORMALIZE_STD),
-    ]
+    ### --
+    # model initialization, Vision Transformer
+    model = timm.create_model(configs.VIT_BASE_PATCH32_224_SAM, pretrained=True)
 
-    transforms = T.Compose(transforms)
+    # putting model on GPU
+    model.to("cuda")
+
+    # setting mode for inference
+    model.eval()
+
+    # REPLACING IDENTITY LAYER
+    replace_identity(model, "model")
+
+    cfg = timm.data.resolve_data_config({}, model=model)
+    transforms = timm.data.transforms_factory.create_transform(**cfg)
 
     # initializing the dataset
     test_set = ImageNet(
@@ -50,7 +57,7 @@ def main():
 
     ### --
     # model initialization, Vision Transformer
-    model = timm.create_model(configs.VIT_BASE_PATCH16_224, pretrained=True)
+    model = timm.create_model(configs.EVA_BASE_PATCH14_448_MIM, pretrained=True)
 
     # putting model on GPU
     model.to("cuda")
