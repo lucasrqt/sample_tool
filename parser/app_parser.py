@@ -130,6 +130,64 @@ class Parser:
 
         return (res_stdout, res_stderr)
 
+    def parse_per_cat(self, app: App) -> Tuple[dict, dict]:
+        """
+        Parses results depending on the category
+        - SDC (tensor changed)
+        - critical SDC (wrong classification)
+        - DUE (crash)
+        """
+        folder_base = f"{app.app_folder}/{app.app_name}"
+        res = {}
+
+        # fmt: off
+        sdc, crit_sdc, due, msk, = CAT_STR[SDC], CAT_STR[CRIT_SDC], CAT_STR[DUE], CAT_STR[MASKED]
+
+        for i, group in enumerate(app.groups):
+            gp = IGID_STR[group]
+            res[gp]  = {}
+            print(f"    [+] parsing group {gp}")
+            for model in app.bfms[i]:
+                md = EM_STR[model]
+                res[gp][md] = {}
+                print(" "*8 + f"• fault model: {md}")
+
+                res[gp][md][sdc] = 0
+                res[gp][md][crit_sdc] = 0
+                res[gp][md][due] = 0
+                res[gp][md][msk] = 0
+
+                for injection in range(1, app.flt_p_fm + 1):
+                    dir = f"{folder_base}-group{group}-model{model}-icount{injection}"
+                    stdout_diff = f"{dir}/stdout_diff.log"
+                    stderr_diff = f"{dir}/stderr_diff.log"
+
+                    stdout_msk = False
+                    # STDOUT part
+                    try:
+                        if os.stat(stdout_diff).st_size > 0:                
+                            output_errs, class_errs, other_errs = self.__parse_stdout(
+                                f"{dir}/stdout.txt"
+                            )
+                            if class_errs > 0:
+                                res[gp][md][crit_sdc] += class_errs
+                            elif output_errs > 0:
+                                res[gp][md][sdc] += output_errs
+                            elif other_errs > 0:
+                                res[gp][md][due] += other_errs
+                    except:
+                        stdout_msk = True
+
+                    # STDERR part
+                    try:
+                        if os.stat(stderr_diff).st_size > 0:
+                            res[gp][md][due] += 1
+                    except:
+                        if stdout_msk:
+                            res[gp][md][msk] += 1
+
+        return res
+
     def parse_per_kernel(self, app: App) -> Tuple[dict, dict]:
         """
         Traverse all results folders to parse the different results depending kernel call

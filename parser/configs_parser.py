@@ -107,3 +107,12 @@ OTHER_ERR = 3
 
 # output types str
 OT_STR = ["Output error", "Classification error", "Masked", "Other error"]
+
+### OUTPUT CATEGORIES
+SDC = 0
+CRIT_SDC = 1
+DUE = 2
+MASKED = 3
+
+# categories STR
+CAT_STR = ["SDC", "Critical SDC", "DUE", "Masked"]
