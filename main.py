@@ -124,7 +124,7 @@ def main():
     data_iter = iter(data_loader)
 
     # inference w/ dataloader
-    for _i in range(configs.DEFAULT_INDEX + 1):
+    for _i in range(configs.DEFAULT_INDEX):
         image, label = next(data_iter)
 
     with torch.no_grad():

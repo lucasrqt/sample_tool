@@ -81,10 +81,10 @@ def main():
             image = image.to("cpu")
             output = output.to("cpu")
             del image, output
+
     print(
         f"min_min: {min_min},  min_max: {min_max}\nmax_min: {max_min}, max_max: {max_max}"
     )
-    print(min_min, min_max, max_min, max_max)
 
 
 if __name__ == "__main__":
