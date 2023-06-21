@@ -14,14 +14,18 @@ def main():
     parser = Parser()
 
     # sample tool app init
-    results_folder_path = f"{BASE_DIR}/sample_tool_warp_40"
+    results_folder_path = f"{BASE_DIR}/sample-tool-vit16_224-250"
     injections = {
-        G_GP: [FLIP_SINGLE_BIT, ZERO_VALUE, WARP_ZERO_VALUE],
-        G_FP32: [FLIP_SINGLE_BIT, ZERO_VALUE, WARP_ZERO_VALUE],
+        G_GP: [FLIP_SINGLE_BIT, RANDOM_VALUE],
+        G_LD: [FLIP_SINGLE_BIT, RANDOM_VALUE],
+        G_FP32: [FLIP_SINGLE_BIT, RANDOM_VALUE, WARP_RANDOM_VALUE],
     }
-    sample_tool = App("sample-tool", results_folder_path, 40, injections)
+    sample_tool = App("sample-tool", results_folder_path, 250, injections)
 
-    print(f" [+] parsing results...")
+    print(f" [+] parsing results per category...")
+    res_cat = parser.parse_per_cat(sample_tool)
+
+    print(f" [+] parsing results per bfm...")
     res_stdout, res_stderr = parser.parse_per_bfm(sample_tool)
 
     print(f" [+] parsing results for kernel")
@@ -30,8 +34,10 @@ def main():
     # print(f" [+] deep parsing results for kernel")
     # res_ker_bfm = parser.parse_per_kernel_bfm(sample_tool)
 
+    df_res = parser.dict_to_dataframe(res_cat)
     df_stdout = parser.dict_to_dataframe(res_stdout)
     df_stderr = parser.dict_to_dataframe(res_stderr)
+    df_res.to_csv(f"{results_folder_path}/results_cat.csv")
     df_stdout.to_csv(f"{results_folder_path}/results_stdout.csv")
     df_stderr.to_csv(f"{results_folder_path}/results_stderr.csv")
 
