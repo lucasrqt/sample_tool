@@ -10,15 +10,19 @@ import logging
 import timm
 
 
-def replace_identity(module, name):
+def replace_identity(module, name, model_name):
     """Recursively put desired module in nn.module module."""
     # go through all attributes of module nn.module (e.g. network or layer) and put batch norms if present
     for attr_str in dir(module):
         target_attr = getattr(module, attr_str)
         if type(target_attr) == torch.nn.Identity:
             # print("replaced: ", name, attr_str)
-            new_identity = hardened_identity.HardenedIdentity()
+            new_identity = hardened_identity.HardenedIdentity(model_name)
             setattr(module, attr_str, new_identity)
+
+    # iterate through immediate child modules. Note, the recursion is done by our code no need to use named_modules()
+    for name, immediate_child_module in module.named_children():
+        replace_identity(immediate_child_module, name, model_name)
 
 
 def equal(rhs: torch.Tensor, lhs: torch.Tensor, threshold: float = 0) -> bool:
@@ -95,7 +99,8 @@ def main():
 
     ### --
     # model initialization, Vision Transformer
-    model = timm.create_model(configs.VIT_BASE_PATCH32_224_SAM, pretrained=True)
+    model_name = configs.VIT_BASE_PATCH32_224_SAM
+    model = timm.create_model(model_name, pretrained=True)
 
     # putting model on GPU
     model.to("cuda")
@@ -105,7 +110,8 @@ def main():
 
     # check if hardened mode
     if args.replace_id:
-        replace_identity(model, "model", m)
+        replace_identity(model, "model", model_name)
+        print(" [+] Identity layers hardened")
 
     cfg = timm.data.resolve_data_config({}, model=model)
     transforms = timm.data.transforms_factory.create_transform(**cfg)
@@ -119,12 +125,6 @@ def main():
 
     # initializing the dataloader
     data_loader = DataLoader(test_set, batch_size=1)
-
-    # image labels
-    imagenet_labels = dict(
-        enumerate(open(f"{configs.BASE_DIR}/data/ilsvrc2012_wordnet_lemmas.txt"))
-    )
-
     data_iter = iter(data_loader)
 
     # inference w/ dataloader
