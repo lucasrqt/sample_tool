@@ -164,3 +164,4 @@ cython_debug/
 *.pth
 *.csv
 run_tests.sh
+results/*
