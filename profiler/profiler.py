@@ -1,9 +1,15 @@
 #! /usr/bin/python3
 
+import sys
+import os
+
+current = os.path.dirname(os.path.realpath(__file__))
+parent = os.path.dirname(current)
+sys.path.append(parent)
+
 import torch
 from torchvision.datasets import ImageNet
 from torch.utils.data import DataLoader
-import torchvision.transforms as T
 import configs, hardened_identity, profiling
 import timm
 
@@ -26,7 +32,7 @@ def replace_identity(module, name, model_name):
 def main():
     ### --
     # model initialization, Vision Transformer
-    model_name = configs.VIT_BASE_PATCH16_384
+    model_name = configs.VIT_BASE_PATCH32_224_SAM
     model = timm.create_model(model_name, pretrained=True)
 
     # putting model on GPU

@@ -3,7 +3,6 @@
 import torch
 from torchvision.datasets import ImageNet
 from torch.utils.data import DataLoader
-import torchvision.transforms as T
 import configs, hardened_identity
 import argparse
 import logging
