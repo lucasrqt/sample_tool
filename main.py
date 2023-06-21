@@ -4,10 +4,21 @@ import torch
 from torchvision.datasets import ImageNet
 from torch.utils.data import DataLoader
 import torchvision.transforms as T
-import configs
+import configs, hardened_identity
 import argparse
 import logging
 import timm
+
+
+def replace_identity(module, name):
+    """Recursively put desired module in nn.module module."""
+    # go through all attributes of module nn.module (e.g. network or layer) and put batch norms if present
+    for attr_str in dir(module):
+        target_attr = getattr(module, attr_str)
+        if type(target_attr) == torch.nn.Identity:
+            # print("replaced: ", name, attr_str)
+            new_identity = hardened_identity.HardenedIdentity()
+            setattr(module, attr_str, new_identity)
 
 
 def equal(rhs: torch.Tensor, lhs: torch.Tensor, threshold: float = 0) -> bool:
@@ -62,6 +73,13 @@ def main():
     arg_parser.add_argument(
         "-l", "--loadsave", help="path to the save to load", type=str
     )
+    arg_parser.add_argument(
+        "-r",
+        "--replace-id",
+        help="replace identity layers by hardened ones",
+        action=argparse.BooleanOptionalAction,
+        default=False,
+    )
     args = arg_parser.parse_args()
 
     # logger
@@ -84,6 +102,10 @@ def main():
 
     # setting mode for inference
     model.eval()
+
+    # check if hardened mode
+    if args.replace_id:
+        replace_identity(model, "model", m)
 
     cfg = timm.data.resolve_data_config({}, model=model)
     transforms = timm.data.transforms_factory.create_transform(**cfg)
