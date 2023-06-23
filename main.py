@@ -73,9 +73,15 @@ def compare_classification(
 
 def main():
     # parser part
-    arg_parser = argparse.ArgumentParser(prog="sample-tool", add_help=True)
+    arg_parser = argparse.ArgumentParser(
+        prog="sample-tool", add_help=True, formatter_class=argparse.RawTextHelpFormatter
+    )
     arg_parser.add_argument(
-        "-l", "--loadsave", help="path to the save to load", type=str
+        "-l",
+        "--loadsave",
+        help="load saved for the chosen model",
+        action=argparse.BooleanOptionalAction,
+        default=False,
     )
     arg_parser.add_argument(
         "-r",
@@ -83,6 +89,15 @@ def main():
         help="replace identity layers by hardened ones",
         action=argparse.BooleanOptionalAction,
         default=False,
+    )
+    arg_parser.add_argument(
+        "-m",
+        "--model",
+        help="specify the wanted TIMM model: (default: {}) \n{}".format(
+            configs.VIT_BASE_PATCH16_224, "\n".join(configs.MODELS)
+        ),
+        default=configs.VIT_BASE_PATCH16_224,
+        type=str,
     )
     args = arg_parser.parse_args()
 
@@ -99,7 +114,14 @@ def main():
 
     ### --
     # model initialization, Vision Transformer
-    model_name = configs.VIT_BASE_PATCH32_224_SAM
+    model_name = args.model
+    if not model_name in configs.MODELS:
+        print(
+            f" [-] Model '{model_name}' not available, selecting {configs.VIT_BASE_PATCH16_224}.\n"
+            "     Please see available models by running this tool with option -h (./main.py -h)."
+        )
+        model_name = configs.VIT_BASE_PATCH16_224
+
     model = timm.create_model(model_name, pretrained=True)
 
     # putting model on GPU
@@ -111,7 +133,6 @@ def main():
     # check if hardened mode
     if args.replace_id:
         replace_identity(model, "model", model_name)
-        print(" [+] Identity layers hardened")
 
     cfg = timm.data.resolve_data_config({}, model=model)
     transforms = timm.data.transforms_factory.create_transform(**cfg)
@@ -137,18 +158,26 @@ def main():
 
         # getting the prediction
         output = model(image)
+        torch.cuda.synchronize(device=torch.device("cuda"))
 
         # moving output to CPU
         output_cpu = output.to("cpu")
+
+    if args.replace_id:
+        save_name = (
+            f"{configs.BASE_DIR}/{configs.GOLD_BASE}/goldsave_{model_name}-HD.pt"
+        )
+    else:
+        save_name = f"{configs.BASE_DIR}/{configs.GOLD_BASE}/goldsave_{model_name}.pt"
 
     if not args.loadsave:
         pred = get_top_k_labels(output, top_k=configs.TOP_K_MAX).item()
         if pred != label.item():
             print(f" [-] wrong classification value {pred}, expected {label.item()}")
 
-        torch.save(output_cpu, f"{configs.BASE_DIR}/{configs.OUTPUT_PATH}")
+        torch.save(output_cpu, save_name)
     else:
-        prev_output = torch.load(args.loadsave, map_location=torch.device("cuda"))
+        prev_output = torch.load(save_name, map_location=torch.device("cuda"))
         output_errs, class_errs = compare_classification(
             output, prev_output, configs.TOP_K_MAX, logger=logger
         )

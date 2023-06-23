@@ -1,7 +1,7 @@
 import os
 
 MAIN_SCRIPT = "main.py"
-BASE_DIR = "/home/lucasroquet/sample-tool/results/"
+BASE_DIR = "/home/lucasroquet/sample_tool/results/"
 
 #######################################################################
 # Categories of instruction types (IGIDs): This should match the values set in

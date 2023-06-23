@@ -141,7 +141,7 @@ class Parser:
         res = {}
 
         # fmt: off
-        sdc, crit_sdc, due, msk, = CAT_STR[SDC], CAT_STR[CRIT_SDC], CAT_STR[DUE], CAT_STR[MASKED]
+        sdc, crit_sdc, due = CAT_STR[SDC], CAT_STR[CRIT_SDC], CAT_STR[DUE]
 
         for i, group in enumerate(app.groups):
             gp = IGID_STR[group]
@@ -155,7 +155,6 @@ class Parser:
                 res[gp][md][sdc] = 0
                 res[gp][md][crit_sdc] = 0
                 res[gp][md][due] = 0
-                res[gp][md][msk] = 0
 
                 for injection in range(1, app.flt_p_fm + 1):
                     dir = f"{folder_base}-group{group}-model{model}-icount{injection}"
@@ -176,15 +175,18 @@ class Parser:
                             elif other_errs > 0:
                                 res[gp][md][due] += other_errs
                     except:
-                        stdout_msk = True
+                        pass
 
                     # STDERR part
                     try:
                         if os.stat(stderr_diff).st_size > 0:
                             res[gp][md][due] += 1
                     except:
-                        if stdout_msk:
-                            res[gp][md][msk] += 1
+                        pass
+                
+                res[gp][md][sdc] = res[gp][md][sdc] * 100 / app.flt_p_fm
+                res[gp][md][crit_sdc] = res[gp][md][crit_sdc] * 100 / app.flt_p_fm
+                res[gp][md][due] = res[gp][md][due] * 100 / app.flt_p_fm
 
         return res
 
