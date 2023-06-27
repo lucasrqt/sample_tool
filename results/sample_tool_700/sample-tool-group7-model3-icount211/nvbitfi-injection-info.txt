@@ -1,7 +1,0 @@
-7
-3
-voidat::native::vectorized_elementwise_kernel<4,at::native::CUDAFunctor_add<float>,at::detail::Array<char*,3>>(int,at::native::CUDAFunctor_add<float>,at::detail::Array<char*,3>)
-28
-230558
-0.46912644971598727
-0.0647309617041596

@@ -1,4 +1,0 @@
-inspecting: voidat::native::(anonymousnamespace)::vectorized_layer_norm_kernel<float,float>(int,float,floatconst*,floatconst*,floatconst*,float*,float*,float*)
-num_static_instrs: 1208
-maxregs: 42(42)
-ERROR FAIL in kernel execution (an illegal memory access was encountered); 

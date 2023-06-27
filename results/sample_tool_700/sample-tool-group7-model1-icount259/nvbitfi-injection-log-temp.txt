@@ -1,4 +1,0 @@
-inspecting: voidimplicit_convolve_sgemm<float,float,1024,5,5,3,3,3,1,false,false,true>(int,int,int,floatconst*,int,float*,floatconst*,kernel_conv_params,unsignedlonglong,int,float,float,int,floatconst*,floatconst*,bool,int,int)
-num_static_instrs: 1464
-maxregs: 64(64)
-ERROR FAIL in kernel execution (an illegal memory access was encountered); 
