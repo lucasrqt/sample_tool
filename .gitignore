@@ -163,6 +163,14 @@ cython_debug/
 *.pt
 *.pth
 run_tests.sh
+!results/
+results/*
+!results/*.ipynb
+!results/*.csv
+!results/vit*/
+results/vit*/*
+!results/vit*/*.ipynb
+!results/vit*/*.csv
 results/sample*
 results/plots/
 results/*.png
