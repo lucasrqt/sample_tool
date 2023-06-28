@@ -156,19 +156,22 @@ def main():
     )
 
     # initializing the dataloader
-    data_loader = DataLoader(test_set, batch_size=5)
+    data_loader = DataLoader(test_set, batch_size=5, num_workers=1, shuffle=True)
     data_iter = iter(data_loader)
 
+    imagenet_labels = dict(enumerate(open("data/ilsvrc2012_wordnet_lemmas.txt")))
+
     # inference w/ dataloader
-    for _i in range(configs.DEFAULT_INDEX):
-        image, label = next(data_iter)
+    # for _i in range(configs.DEFAULT_INDEX):
+    #     image, label = next(data_iter)
+    images, labels = next(data_iter)
 
     with torch.no_grad():
         # puting image on GPU
-        image = image.to("cuda")
+        images = images.to("cuda")
 
         # getting the prediction
-        output = model(image)
+        output = model(images)
         torch.cuda.synchronize(device=torch.device("cuda"))
 
         # moving output to CPU
@@ -182,9 +185,15 @@ def main():
         save_name = f"{configs.BASE_DIR}/{configs.GOLD_BASE}/goldsave_{model_name}.pt"
 
     if not args.loadsave:
-        pred = get_top_k_labels(output, top_k=configs.TOP_K_MAX).item()
-        if pred != label.item():
-            print(f" [-] wrong classification value {pred}, expected {label.item()}")
+        pred = get_top_k_labels(output_cpu, top_k=configs.TOP_K_MAX)
+        print(labels == pred.squeeze())
+        for i in range(5):
+            img_lbl = imagenet_labels[labels[i].item()].rstrip("\n")
+            pred_lbl = imagenet_labels[pred[i].item()].rstrip("\n")
+            print(f"expected: {img_lbl} -- pred: {pred_lbl}")
+
+        # if pred != labels.item():
+        #   print(f" [-] wrong classification value {pred}, expected {labels.item()}")
 
         torch.save(output_cpu, save_name)
     else:
