@@ -20,7 +20,7 @@ class HardenedIdentity(torch.nn.Identity):
     }
 
     # each min/max value is multiply by this constant to avoid too tight value restriction
-    __BOUND_RATIO = 1.3
+    __BOUND_RATIO = 1.1
 
     def __init__(self, model: str | None, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)

@@ -91,6 +91,13 @@ def main():
         default=False,
     )
     arg_parser.add_argument(
+        "-s",
+        "--seed",
+        help="set the seed for batch inference",
+        type=int,
+        default=493,
+    )
+    arg_parser.add_argument(
         "-m",
         "--model",
         help="specify the wanted TIMM model: (default: {}) \n{}".format(
@@ -111,6 +118,10 @@ def main():
     )
 
     logger = logging.getLogger()
+
+    ### --
+    # toch seed
+    torch.manual_seed(args.seed)
 
     ### --
     # model initialization, Vision Transformer
@@ -145,7 +156,7 @@ def main():
     )
 
     # initializing the dataloader
-    data_loader = DataLoader(test_set, batch_size=1)
+    data_loader = DataLoader(test_set, batch_size=5)
     data_iter = iter(data_loader)
 
     # inference w/ dataloader
