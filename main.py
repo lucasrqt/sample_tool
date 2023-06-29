@@ -150,12 +150,14 @@ def main():
     )
 
     # initializing the dataloader
-    data_loader = DataLoader(
-        test_set, batch_size=configs.BATCH_SIZE, num_workers=1, shuffle=True
-    )
+    data_loader = DataLoader(test_set, batch_size=configs.BATCH_SIZE, shuffle=True)
     data_iter = iter(data_loader)
 
-    imagenet_labels = dict(enumerate(open("data/ilsvrc2012_wordnet_lemmas.txt")))
+    imagenet_labels = dict(
+        enumerate(
+            open("/home/lucasroquet/sample_tool/data/ilsvrc2012_wordnet_lemmas.txt")
+        )
+    )
 
     # inference w/ dataloader
     # for _i in range(configs.DEFAULT_INDEX):
@@ -193,9 +195,7 @@ def main():
 
         torch.save(output_cpu, save_name)
     else:
-        prev_output = torch.load(
-            "data/goldsave_vit_base_patch16_224.pt", map_location=torch.device("cpu")
-        )
+        prev_output = torch.load(save_name, map_location=torch.device("cpu"))
         errors = compare_classification(output_cpu, prev_output, configs.TOP_K_MAX)
         if errors != {}:
             res = f""

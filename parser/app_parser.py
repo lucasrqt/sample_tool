@@ -56,14 +56,20 @@ class Parser:
 
             # only extract digits surrounded by boundaries
             output = re.findall(r"\b\d+\b", file.read())
+            opt_err = sum([int(output[i]) for i in range(len(output)) if i % 3 == 1])
+            cls_err = sum([int(output[i]) for i in range(len(output)) if i % 3 == 2])
 
             # getting output results
-            if output:
-                output = [int(x) for x in output]
-                output_errs += output[OUTPUT_ERR]
-                class_errs += output[CLASS_ERR]
+            # if output:
+            #     output = [int(x) for x in output]
+            #     output_errs += output[OUTPUT_ERR]
+            #     class_errs += output[CLASS_ERR]
+            if opt_err > 0:
+                output_errs += 1
+            if cls_err > 0:
+                class_errs += 1
             # if there's no value it means that there was an other error
-            else:
+            elif opt_err == 0 and cls_err == 0:
                 other_errs += 1
 
         return output_errs, class_errs, other_errs
