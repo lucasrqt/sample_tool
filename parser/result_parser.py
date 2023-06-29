@@ -21,9 +21,9 @@ def main():
         G_FP32: [FLIP_SINGLE_BIT, RANDOM_VALUE, WARP_RANDOM_VALUE],
     }
 
-    st_16b_384_name = "vit16_384"
-    st_16b_384_path = f"{BASE_DIR}/vit16_384"
-    sample_tool_16b_384 = App(st_16b_384_name, st_16b_384_path, inj_per_fm, injections)
+    st_16b_224_name = "vit16_224-mulin"
+    st_16b_224_path = f"{BASE_DIR}/vit16_224-mulin"
+    sample_tool_16b_384 = App(st_16b_224_name, st_16b_224_path, inj_per_fm, injections)
 
     apps = [sample_tool_16b_384]
 
@@ -31,7 +31,7 @@ def main():
     for app in apps:
         print(f" [+] parsing results per category")
         res = parser.parse_per_cat(app)
-
+        print(res)
         errs_by_model[app.app_name] = {"SDC": 0.0, "Critical SDC": 0.0, "DUE": 0.0}
         bfms_cnt = 0
         for group in res:

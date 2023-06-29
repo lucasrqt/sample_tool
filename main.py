@@ -41,19 +41,14 @@ def get_top_k_labels(tensor: torch.tensor, top_k: int) -> torch.tensor:
 def compare_classification(
     output_tsr: torch.tensor, golden_tsr: torch.tensor, top_k: int, logger=None
 ) -> int:
-    output_errors, classification_errors = 0, 0
+    errors = {}
     output_tsr, golden_tsr = output_tsr.to("cpu"), golden_tsr.to("cpu")
 
     # tensor comparison
     if not equal(output_tsr, golden_tsr, threshold=1e-4):
-        for _i, (output, golden) in enumerate(zip(output_tsr, golden_tsr)):
+        for i, (output, golden) in enumerate(zip(output_tsr, golden_tsr)):
             if not equal(output, golden):
-                err_str = (
-                    f"error, output modified -- expected:{golden}  output:{output}"
-                )
-                output_errors += 1
-                if logger:
-                    logger.error(err_str)
+                errors[i] = (1, 0)
 
     # top k comparison to check if classification has changed
     output_topk = get_top_k_labels(output_tsr, top_k)
@@ -61,14 +56,13 @@ def compare_classification(
     if equal(output_topk, golden_topk) is False:
         for i, (tpk_found, tpk_gold) in enumerate(zip(output_topk, golden_topk)):
             if tpk_found != tpk_gold:
-                err_str = (
-                    f"wrong classification -- expected:{tpk_gold}  output:{tpk_found}"
-                )
-                classification_errors += 1
-                if logger:
-                    logger.error(err_str)
+                if i in errors:
+                    output, _ = errors[i]
+                    errors[i] = (output, 1)
+                else:
+                    errors[i] = (0, 1)
 
-    return output_errors, classification_errors
+    return errors
 
 
 def main():
@@ -91,6 +85,13 @@ def main():
         default=False,
     )
     arg_parser.add_argument(
+        "-s",
+        "--seed",
+        help="set the seed for batch inference",
+        type=int,
+        default=493,
+    )
+    arg_parser.add_argument(
         "-m",
         "--model",
         help="specify the wanted TIMM model: (default: {}) \n{}".format(
@@ -111,6 +112,10 @@ def main():
     )
 
     logger = logging.getLogger()
+
+    ### --
+    # toch seed
+    torch.manual_seed(args.seed)
 
     ### --
     # model initialization, Vision Transformer
@@ -145,19 +150,26 @@ def main():
     )
 
     # initializing the dataloader
-    data_loader = DataLoader(test_set, batch_size=1)
+    data_loader = DataLoader(test_set, batch_size=configs.BATCH_SIZE, shuffle=True)
     data_iter = iter(data_loader)
 
+    imagenet_labels = dict(
+        enumerate(
+            open("/home/lucasroquet/sample_tool/data/ilsvrc2012_wordnet_lemmas.txt")
+        )
+    )
+
     # inference w/ dataloader
-    for _i in range(configs.DEFAULT_INDEX):
-        image, label = next(data_iter)
+    # for _i in range(configs.DEFAULT_INDEX):
+    #     image, label = next(data_iter)
+    images, labels = next(data_iter)
 
     with torch.no_grad():
         # puting image on GPU
-        image = image.to("cuda")
+        images = images.to("cuda")
 
         # getting the prediction
-        output = model(image)
+        output = model(images)
         torch.cuda.synchronize(device=torch.device("cuda"))
 
         # moving output to CPU
@@ -171,19 +183,26 @@ def main():
         save_name = f"{configs.BASE_DIR}/{configs.GOLD_BASE}/goldsave_{model_name}.pt"
 
     if not args.loadsave:
-        pred = get_top_k_labels(output, top_k=configs.TOP_K_MAX).item()
-        if pred != label.item():
-            print(f" [-] wrong classification value {pred}, expected {label.item()}")
+        pred = get_top_k_labels(output_cpu, top_k=configs.TOP_K_MAX)
+        print(labels == pred.squeeze())
+        for i in range(configs.BATCH_SIZE):
+            img_lbl = imagenet_labels[labels[i].item()].rstrip("\n")
+            pred_lbl = imagenet_labels[pred[i].item()].rstrip("\n")
+            print(f"expected: {img_lbl} -- pred: {pred_lbl}")
+
+        # if pred != labels.item():
+        #   print(f" [-] wrong classification value {pred}, expected {labels.item()}")
 
         torch.save(output_cpu, save_name)
     else:
-        prev_output = torch.load(save_name, map_location=torch.device("cuda"))
-        output_errs, class_errs = compare_classification(
-            output, prev_output, configs.TOP_K_MAX, logger=logger
-        )
-        print(
-            f" [+] ouput errors: {output_errs} -- classification errors: {class_errs}"
-        )
+        prev_output = torch.load(save_name, map_location=torch.device("cpu"))
+        errors = compare_classification(output_cpu, prev_output, configs.TOP_K_MAX)
+        if errors != {}:
+            res = f""
+            for idx in errors:
+                otpt, clss = errors[idx]
+                res += f"{idx}: ouput errors: {otpt} -- classification: {clss}\n"
+            print(res)
 
 
 if __name__ == "__main__":
