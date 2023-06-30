@@ -114,10 +114,6 @@ def main():
     logger = logging.getLogger()
 
     ### --
-    # toch seed
-    torch.manual_seed(args.seed)
-
-    ### --
     # model initialization, Vision Transformer
     model_name = args.model
     if not model_name in configs.MODELS:
@@ -142,15 +138,20 @@ def main():
     cfg = timm.data.resolve_data_config({}, model=model)
     transforms = timm.data.transforms_factory.create_transform(**cfg)
 
+    sampler_generator = torch.Generator(device="cpu")
+    sampler_generator.manual_seed(args.seed)
     # initializing the dataset
     test_set = ImageNet(
         root=configs.DATA_PATH,
         transform=transforms,
         split="val",
     )
+    subset = torch.utils.data.RandomSampler(
+        data_source=test_set, replacement=False, generator=sampler_generator
+    )
 
     # initializing the dataloader
-    data_loader = DataLoader(test_set, batch_size=configs.BATCH_SIZE, shuffle=True)
+    data_loader = DataLoader(test_set, batch_size=configs.BATCH_SIZE, sampler=subset)
     data_iter = iter(data_loader)
 
     imagenet_labels = dict(
