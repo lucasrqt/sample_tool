@@ -12,6 +12,7 @@ from torchvision.datasets import ImageNet
 from torch.utils.data import DataLoader
 import configs, hardened_identity, profiling
 import timm
+import time
 
 
 def replace_identity(module, name, model_name):
@@ -31,13 +32,14 @@ def replace_identity(module, name, model_name):
 
 def main():
     models = [
-        configs.VIT_BASE_PATCH16_224,
-        configs.VIT_BASE_PATCH16_384,
-        configs.VIT_LARGE_PATCH14_CLIP_224,
+        # configs.VIT_BASE_PATCH16_224,
+        # configs.VIT_BASE_PATCH16_384,
+        # configs.VIT_LARGE_PATCH14_CLIP_224,
         configs.VIT_BASE_PATCH32_224_SAM,
     ]
 
     for model_name in models:
+        start = time.time()
         model = timm.create_model(model_name, pretrained=True)
 
         # putting model on GPU
@@ -73,30 +75,27 @@ def main():
 
         data_iter = iter(data_loader)
 
-        print(f" [+] Profiling model {model_name}")
+        print(f" [+] Profiling model {model_name}...\n")
 
         with torch.no_grad():
             # inference w/ dataloader
-            for image, _ in data_iter:
+            for images, _ in data_iter:
                 # puting image on GPU
-                image = image.to("cuda")
+                images = images.to("cuda")
 
                 # getting the prediction
-                output = model(image)
+                output = model(images)
 
                 min_min, min_max, max_min, max_max = profiling.get_deltas(
                     profiler.get_min_max()
                 )
 
-                # moving output to CPU
-                image = image.to("cpu")
-                output = output.to("cpu")
-                del image, output
+                del images, output
 
         print(
-            f"Model: {model_name}"
-            f"min_min: {min_min},  min_max: {min_max}\nmax_min: {max_min}, max_max: {max_max}"
-            "-" * 80
+            f"Model: {model_name} ({time.time()-start}s)\n"
+            + f"min_min: {min_min},  min_max: {min_max}\nmax_min: {max_min}, max_max: {max_max}\n"
+            + "-" * 80
         )
 
 
