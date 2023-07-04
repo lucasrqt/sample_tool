@@ -30,67 +30,74 @@ def replace_identity(module, name, model_name):
 
 
 def main():
-    ### --
-    # model initialization, Vision Transformer
-    model_name = configs.VIT_BASE_PATCH32_224_SAM
-    model = timm.create_model(model_name, pretrained=True)
+    models = [
+        configs.VIT_BASE_PATCH16_224,
+        configs.VIT_BASE_PATCH16_384,
+        configs.VIT_LARGE_PATCH14_CLIP_224,
+        configs.VIT_BASE_PATCH32_224_SAM,
+    ]
 
-    # putting model on GPU
-    model.to("cuda")
+    for model_name in models:
+        model = timm.create_model(model_name, pretrained=True)
 
-    # setting mode for inference
-    model.eval()
+        # putting model on GPU
+        model.to("cuda")
 
-    # REPLACING IDENTITY LAYER
-    replace_identity(model, "model", model_name)
+        # setting mode for inference
+        model.eval()
 
-    cfg = timm.data.resolve_data_config({}, model=model)
-    transforms = timm.data.transforms_factory.create_transform(**cfg)
+        # REPLACING IDENTITY LAYER
+        replace_identity(model, "model", model_name)
 
-    # initializing the dataset
-    test_set = ImageNet(
-        root=configs.DATA_PATH,
-        transform=transforms,
-        split="val",
-    )
+        cfg = timm.data.resolve_data_config({}, model=model)
+        transforms = timm.data.transforms_factory.create_transform(**cfg)
 
-    # initializing the dataloader
-    data_loader = DataLoader(test_set, batch_size=1)
+        # initializing the dataset
+        test_set = ImageNet(
+            root=configs.DATA_PATH,
+            transform=transforms,
+            split="val",
+        )
 
-    # image labels
-    imagenet_labels = dict(
-        enumerate(open(f"{configs.BASE_DIR}/data/ilsvrc2012_wordnet_lemmas.txt"))
-    )
+        # initializing the dataloader
+        data_loader = DataLoader(test_set, batch_size=1)
 
-    # profiling part
-    profiler = profiling.Profiling()
-    _hooks = profiler.register_hook(model, hardened_identity.HardenedIdentity)
+        # image labels
+        # imagenet_labels = dict(
+        #     enumerate(open(f"{configs.BASE_DIR}/data/ilsvrc2012_wordnet_lemmas.txt"))
+        # )
 
-    data_iter = iter(data_loader)
+        # profiling part
+        profiler = profiling.Profiling()
+        _hooks = profiler.register_hook(model, hardened_identity.HardenedIdentity)
 
-    print(f" [+] Profiling model {model_name}")
+        data_iter = iter(data_loader)
 
-    with torch.no_grad():
-        # inference w/ dataloader
-        for image, _ in data_iter:
-            # puting image on GPU
-            image = image.to("cuda")
+        print(f" [+] Profiling model {model_name}")
 
-            # getting the prediction
-            output = model(image)
+        with torch.no_grad():
+            # inference w/ dataloader
+            for image, _ in data_iter:
+                # puting image on GPU
+                image = image.to("cuda")
 
-            min_min, min_max, max_min, max_max = profiling.get_deltas(
-                profiler.get_min_max()
-            )
+                # getting the prediction
+                output = model(image)
 
-            # moving output to CPU
-            image = image.to("cpu")
-            output = output.to("cpu")
-            del image, output
+                min_min, min_max, max_min, max_max = profiling.get_deltas(
+                    profiler.get_min_max()
+                )
 
-    print(
-        f"min_min: {min_min},  min_max: {min_max}\nmax_min: {max_min}, max_max: {max_max}"
-    )
+                # moving output to CPU
+                image = image.to("cpu")
+                output = output.to("cpu")
+                del image, output
+
+        print(
+            f"Model: {model_name}"
+            f"min_min: {min_min},  min_max: {min_max}\nmax_min: {max_min}, max_max: {max_max}"
+            "-" * 80
+        )
 
 
 if __name__ == "__main__":
