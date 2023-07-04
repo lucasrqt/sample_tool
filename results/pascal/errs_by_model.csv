@@ -1,0 +1,9 @@
+Model,SDC,Critical SDC,DUE
+vit16_224,,,
+vit16_224-hd,,,
+vit16_384,30.342857142857138,7.028571428571429,1.4285714285714286
+vit16_384-hd,,,
+vit14_large_224,,,
+vit14_large_224-hd,,,
+vit32_sam_224,,,
+vit32_sam_224-hd,,,
