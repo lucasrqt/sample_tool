@@ -32,9 +32,9 @@ def replace_identity(module, name, model_name):
 
 def main():
     models = [
-        # configs.VIT_BASE_PATCH16_224,
-        # configs.VIT_BASE_PATCH16_384,
-        # configs.VIT_LARGE_PATCH14_CLIP_224,
+        configs.VIT_BASE_PATCH16_224,
+        configs.VIT_BASE_PATCH16_384,
+        configs.VIT_LARGE_PATCH14_CLIP_224,
         configs.VIT_BASE_PATCH32_224_SAM,
     ]
 
@@ -79,18 +79,18 @@ def main():
 
         with torch.no_grad():
             # inference w/ dataloader
-            for images, _ in data_iter:
+            for image, _ in data_iter:
                 # puting image on GPU
-                images = images.to("cuda")
+                image = image.to("cuda")
 
                 # getting the prediction
-                output = model(images)
+                output = model(image)
 
                 min_min, min_max, max_min, max_max = profiling.get_deltas(
                     profiler.get_min_max()
                 )
 
-                del images, output
+                del image, output
 
         print(
             f"Model: {model_name} ({time.time()-start}s)\n"
