@@ -35,7 +35,7 @@ def main():
         configs.VIT_BASE_PATCH16_224,
         configs.VIT_BASE_PATCH16_384,
         configs.VIT_LARGE_PATCH14_CLIP_224,
-        configs.VIT_BASE_PATCH32_224_SAM,
+        # configs.VIT_BASE_PATCH32_224_SAM,
     ]
 
     for model_name in models:
@@ -85,10 +85,8 @@ def main():
 
                 # getting the prediction
                 output = model(image)
-
-                min_min, min_max, max_min, max_max = profiling.get_deltas(
-                    profiler.get_min_max()
-                )
+                min, max = profiler.get_min_max()
+                min_min, min_max, max_min, max_max = profiling.get_deltas(min, max)
 
                 del image, output
 
