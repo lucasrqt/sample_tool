@@ -62,7 +62,7 @@ def main():
         )
 
         # initializing the dataloader
-        data_loader = DataLoader(test_set, batch_size=1)
+        data_loader = DataLoader(test_set, batch_size=32)
 
         # image labels
         # imagenet_labels = dict(
