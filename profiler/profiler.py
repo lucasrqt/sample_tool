@@ -14,15 +14,23 @@ import configs, hardened_identity, profiling
 import timm
 import time
 
+MIN_VALS, MAX_VALS = [], []
 
-def replace_identity(module, name, model_name):
+class ProfileIdentity(torch.nn.Indentity)
+    def forward(self, input: torch.Tensor) -> torch.Tensor:
+        global MIN_VALS, MAX_VALS
+        MIN_VALS.append(float(torch.min(input)))
+        MAX_VALS.append(float(torch.max(input)))
+        return input
+
+def replace_identity(module, name):
     """Recursively put desired module in nn.module module."""
     # go through all attributes of module nn.module (e.g. network or layer) and put batch norms if present
     for attr_str in dir(module):
         target_attr = getattr(module, attr_str)
         if type(target_attr) == torch.nn.Identity:
             # print("replaced: ", name, attr_str)
-            new_identity = hardened_identity.HardenedIdentity(model_name)
+            new_identity = ProfileIdentity()
             setattr(module, attr_str, new_identity)
 
     # iterate through immediate child modules. Note, the recursion is done by our code no need to use named_modules()
@@ -35,7 +43,7 @@ def main():
         configs.VIT_BASE_PATCH16_224,
         configs.VIT_BASE_PATCH16_384,
         configs.VIT_LARGE_PATCH14_CLIP_224,
-        # configs.VIT_BASE_PATCH32_224_SAM,
+        configs.VIT_BASE_PATCH32_224_SAM,
     ]
 
     for model_name in models:
@@ -62,7 +70,7 @@ def main():
         )
 
         # initializing the dataloader
-        data_loader = DataLoader(test_set, batch_size=32)
+        data_loader = DataLoader(test_set, batch_size=1, shuffle=True)
 
         # image labels
         # imagenet_labels = dict(
@@ -70,8 +78,8 @@ def main():
         # )
 
         # profiling part
-        profiler = profiling.Profiling()
-        _hooks = profiler.register_hook(model, hardened_identity.HardenedIdentity)
+        # profiler = profiling.Profiling()
+        # _hooks = profiler.register_hook(model, hardened_identity.HardenedIdentity)
 
         data_iter = iter(data_loader)
 
@@ -85,14 +93,14 @@ def main():
 
                 # getting the prediction
                 output = model(image)
-                min, max = profiler.get_min_max()
-                min_min, min_max, max_min, max_max = profiling.get_deltas(min, max)
+                # min, max = profiler.get_min_max()
+                # min_min, min_max, max_min, max_max = profiling.get_deltas(min, max)
 
                 del image, output
 
         print(
             f"Model: {model_name} ({time.time()-start}s)\n"
-            + f"min_min: {min_min},  min_max: {min_max}\nmax_min: {max_min}, max_max: {max_max}\n"
+            + f"min: {min(MIN_VALS)}, max: {max(MAX_VALS)}\n"
             + "-" * 80
         )
 
