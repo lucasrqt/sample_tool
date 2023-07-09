@@ -103,6 +103,7 @@ def main():
             + f"min: {min(MIN_VALS)}, max: {max(MAX_VALS)}\n"
             + "-" * 80
         )
+        MIN_VALS, MAX_VALS = [], []
 
 
 if __name__ == "__main__":
