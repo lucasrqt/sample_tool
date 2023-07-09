@@ -47,6 +47,7 @@ def main():
     ]
 
     for model_name in models:
+        global MIN_VALS, MAX_VALS
         start = time.time()
         model = timm.create_model(model_name, pretrained=True)
 
