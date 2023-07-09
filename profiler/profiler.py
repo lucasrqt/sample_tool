@@ -16,7 +16,7 @@ import time
 
 MIN_VALS, MAX_VALS = [], []
 
-class ProfileIdentity(torch.nn.Indentity)
+class ProfileIdentity(torch.nn.Identity):
     def forward(self, input: torch.Tensor) -> torch.Tensor:
         global MIN_VALS, MAX_VALS
         MIN_VALS.append(float(torch.min(input)))
@@ -35,7 +35,7 @@ def replace_identity(module, name):
 
     # iterate through immediate child modules. Note, the recursion is done by our code no need to use named_modules()
     for name, immediate_child_module in module.named_children():
-        replace_identity(immediate_child_module, name, model_name)
+        replace_identity(immediate_child_module, name)
 
 
 def main():
@@ -57,7 +57,7 @@ def main():
         model.eval()
 
         # REPLACING IDENTITY LAYER
-        replace_identity(model, "model", model_name)
+        replace_identity(model, "model")
 
         cfg = timm.data.resolve_data_config({}, model=model)
         transforms = timm.data.transforms_factory.create_transform(**cfg)
@@ -70,7 +70,7 @@ def main():
         )
 
         # initializing the dataloader
-        data_loader = DataLoader(test_set, batch_size=1, shuffle=True)
+        data_loader = DataLoader(test_set, batch_size=64, shuffle=True)
 
         # image labels
         # imagenet_labels = dict(
