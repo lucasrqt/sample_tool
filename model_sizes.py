@@ -20,7 +20,7 @@ def main():
             buffer_size += buffer.nelement * buffer.element_size()
 
         size_all = (param_size + buffer_size) / 1024**2
-        print('{}: {:.3f}MB'.format(model_name, size_all_mb))
+        print('{}: {:.3f}MB'.format(model_name, size_all))
 
 
 if __name__ == '__main__':
