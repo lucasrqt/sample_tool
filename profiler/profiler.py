@@ -16,12 +16,14 @@ import time
 
 MIN_VALS, MAX_VALS = [], []
 
+
 class ProfileIdentity(torch.nn.Identity):
     def forward(self, input: torch.Tensor) -> torch.Tensor:
         global MIN_VALS, MAX_VALS
         MIN_VALS.append(float(torch.min(input)))
         MAX_VALS.append(float(torch.max(input)))
         return input
+
 
 def replace_identity(module, name):
     """Recursively put desired module in nn.module module."""
@@ -40,10 +42,19 @@ def replace_identity(module, name):
 
 def main():
     models = [
-        configs.VIT_BASE_PATCH16_224,
-        configs.VIT_BASE_PATCH16_384,
-        configs.VIT_LARGE_PATCH14_CLIP_224,
-        configs.VIT_BASE_PATCH32_224_SAM,
+        # configs.VIT_BASE_PATCH16_224,
+        # configs.VIT_BASE_PATCH16_384,
+        # configs.VIT_LARGE_PATCH14_CLIP_224,
+        # configs.VIT_BASE_PATCH32_224_SAM,
+        configs.SWINV2_BASE_WINDOW12TO16_192to256_22KFT1K,
+        configs.SWINV2_BASE_WINDOW12TO24_192to384_22KFT1K,
+        configs.SWINV2_LARGE_WINDOW12TO16_192to256_22KFT1K,
+        configs.SWINV2_LARGE_WINDOW12TO24_192to384_22KFT1K,
+        configs.EVA_LARGE_PATCH14_448_MIM,
+        configs.EVA_BASE_PATCH14_448_MIM,
+        configs.EVA_SMALL_PATCH14_448_MIN,
+        configs.MAXVIT_LARGE_TF_384,
+        configs.MAXVIT_LARGE_TF_512,
     ]
 
     for model_name in models:
