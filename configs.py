@@ -19,11 +19,6 @@ VIT_LARGE_PATCH14_CLIP_224 = "vit_large_patch14_clip_224.laion2b_ft_in12k_in1k"
 VIT_BASE_PATCH16_224 = "vit_base_patch16_224"
 VIT_BASE_PATCH16_384 = "vit_base_patch16_384"
 
-EVA_BASE_PATCH14_448_MIM = "eva02_base_patch14_448.mim_in22k_ft_in22k_in1k"
-
-VIT_HUGE_PATCH14_CLIP_336 = "vit_huge_patch14_clip_336.laion2b_ft_in12k_in1k"
-VIT_HUGE_PATCH14_CLIP_224 = "vit_huge_patch14_clip_224.laion2b_ft_in12k_in1k"
-
 VIT_BASE_PATCH32_224_SAM = "vit_base_patch32_224.sam"
 
 # SwinV2
@@ -63,7 +58,6 @@ MODELS = [
     # VIT_HUGE_PATCH14_CLIP_224,
     # VIT_HUGE_PATCH14_CLIP_336,
     VIT_LARGE_PATCH14_CLIP_224,
-    # EVA_BASE_PATCH14_448_MIM,
     SWINV2_BASE_WINDOW12TO16_192to256_22KFT1K,
     SWINV2_BASE_WINDOW12TO24_192to384_22KFT1K,
     SWINV2_LARGE_WINDOW12TO16_192to256_22KFT1K,
