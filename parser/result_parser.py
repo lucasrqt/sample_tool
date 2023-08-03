@@ -29,7 +29,7 @@ def main():
     swin_b1224_path = f"{BASE_DIR}/ampere/{swin_b1224_n}"
     swin_b1224 = App(swin_b1224_n, swin_b1224_path, inj_per_fm, injections)
 
-    swin_l1216_n = "swin_b12to16"
+    swin_l1216_n = "swin_l12to16"
     swin_l1216_path = f"{BASE_DIR}/ampere/{swin_l1216_n}"
     swin_l1216 = App(swin_l1216_n, swin_l1216_path, inj_per_fm, injections)
 
@@ -47,7 +47,7 @@ def main():
 
     eva_l_n = "eva_large"
     eva_l_path = f"{BASE_DIR}/ampere/{eva_l_n}"
-    eva_l = App(eva_s_n, eva_l_path, inj_per_fm, injections)
+    eva_l = App(eva_l_n, eva_l_path, inj_per_fm, injections)
 
     # maxvit_384_n = "maxvit_l384"
     # maxvit_384_path = f"{BASE_DIR}/ampere/{maxvit_384_n}"
@@ -57,7 +57,17 @@ def main():
     # maxvit_512_path = f"{BASE_DIR}/ampere/{maxvit_512_n}"
     # maxvit_512 = App(maxvit_512_n, maxvit_512_path, inj_per_fm, injections)
 
-    apps = [swin_b1216, swin_b1224, swin_l1216, swin_l1224, eva_s, eva_b, eva_l, maxvit_384, maxvit_512,]
+    apps = [
+        swin_b1216,
+        swin_b1224,
+        swin_l1216,
+        swin_l1224,
+        eva_s,
+        eva_b,
+        eva_l,
+        # maxvit_384,
+        # maxvit_512,
+    ]
 
     errs_by_model = {}
     for app in apps:
@@ -102,7 +112,11 @@ def main():
         # df_kbfm = dict_to_dataframe(res_ker_bfm)
         # df_kbfm.to_csv(f"./{app.app_folder}/results_kernel_bfm.csv")
 
-        print(errs_by_model)
+        for k in errs_by_model:
+            sdc = errs_by_model[k]["SDC"]
+            crit = errs_by_model[k]["Critical SDC"]
+            due = errs_by_model[k]["DUE"]
+            print(f"{k},{sdc},{crit},{due}")
 
 
 if __name__ == "__main__":
