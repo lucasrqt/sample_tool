@@ -1,16 +1,17 @@
 #!/usr/bin/python3
-import glob
-import logging
 import os.path
-import pandas as pd
 import re
-from common.common import PROFILE_DATA_PATH, FINAL_PROFILE_DATABASE
 
+import pandas as pd
 
+import common
 import profiler_class
 import profiler_flags
 
 VOLTA_THREAD_PER_WARP = 32
+BENCHMARKS = {
+
+}
 
 
 def read_csv(csv_path):
@@ -98,11 +99,11 @@ def parse_nvprof_time(csv_path):
 def parse_nsight_metrics(csv_path, kernel_time_weights):
     df = read_csv(csv_path=csv_path)
     line_dict = dict()
-    filter_metrics = [y for x in METRICS_NSIGHT_CLI_SM70.values() if x for y in x]
+    filter_metrics = [y for x in profiler_flags.METRICS_NSIGHT_CLI_SM70.values() if x for y in x]
     # df["weights"] = df["Kernel Name"].apply(lambda x: kernel_time_weights.loc[x]).astype(float)
     df = df[df["Metric Name"].isin(filter_metrics)]
 
-    for nvprof_metric, nsight_set in QUANTITATIVE_METRICS_NSIGHT_CLI.items():
+    for nvprof_metric, nsight_set in profiler_flags.QUANTITATIVE_METRICS_NSIGHT_CLI.items():
         # sum_of_metrics = 0
         # if nsight_set:
         # # UNCOMMENT TO CHECK ANY PROBLEM
@@ -113,10 +114,11 @@ def parse_nsight_metrics(csv_path, kernel_time_weights):
         line_dict[nvprof_metric] = df[df["Metric Name"].isin(nsight_set)].sum()["Metric Value"] if nsight_set else 0
 
     # Occupancy and ipc
-    occupancy_df = df[df["Metric Name"].isin(PERFORMANCE_METRICS_NSIGHT_CLI["achieved_occupancy"])].copy()
-    ipc_df = df[df["Metric Name"].isin(PERFORMANCE_METRICS_NSIGHT_CLI["ipc"])]
+    occupancy_df = df[
+        df["Metric Name"].isin(profiler_flags.PERFORMANCE_METRICS_NSIGHT_CLI["achieved_occupancy"])].copy()
+    ipc_df = df[df["Metric Name"].isin(profiler_flags.PERFORMANCE_METRICS_NSIGHT_CLI["ipc"])]
 
-    # Divide by 100 if it is percentage. Same as nvprof
+    # Divide by 100 if it is a percentage. Same as nvprof
     occupancy_df["Metric Value"] = occupancy_df.apply(
         lambda r: (float(r["Metric Value"]) / 100 if r["Metric Unit"] == "%" else float(r["Metric Value"])),
         axis="columns")
@@ -134,7 +136,7 @@ def parse_nsight_metrics(csv_path, kernel_time_weights):
 
 def parse_nvprof_metrics(csv_path, kernel_time_weights):
     df = read_csv(csv_path=csv_path)
-    metric_dict = df[df["Metric Name"].isin(QUANTITATIVE_METRICS_NSIGHT_CLI.keys())]
+    metric_dict = df[df["Metric Name"].isin(profiler_flags.QUANTITATIVE_METRICS_NSIGHT_CLI.keys())]
     metric_dict = metric_dict[["Metric Name", "Avg"]].groupby("Metric Name").sum().sum(axis=1)
     line_dict = metric_dict.to_dict()
     # df["weights"] = df["Kernel"].apply(lambda x: kernel_time_weights.loc[x]).astype(float)
@@ -153,7 +155,7 @@ def parse_nsight_memory(csv_path, kernel_time_weights):
     df = read_csv(csv_path=csv_path)
     df["weights"] = df["Kernel Name"].apply(lambda x: kernel_time_weights.loc[x]).astype(float)
     memory_dict = dict()
-    # "Shared Memory Configuration Size", "Registers Per Thread"
+    # "Shared Memory Configuration Size," "Registers Per Thread"
     memory_metric = {"Dynamic Shared Memory Per Block": "dynamic_shared_per_block",
                      "Static Shared Memory Per Block": "static_shared_per_block",
                      "Shared Memory Configuration Size": "shared", "Registers Per Thread": "rf"}
@@ -191,12 +193,9 @@ def parse_nvprof_memory(csv_path, kernel_time_weights):
 
 
 def main():
-    logging.setLoggerClass(ColoredLogger)
-    logger = logging.getLogger("parser_profiling")
-
     list_final_metrics = list()
     boards = {"kepler": "NVIDIATeslaK40c", "volta": "NVIDIATITANV", "ampere": "NVIDIAGeForceRTX3060Ti"}
-    boards_obj = {"kepler": ProfilerNvprof, "volta": ProfilerNsight}
+    boards_obj = {"kepler": profiler_class.ProfilerNvprof, "volta": profiler_class.ProfilerNsight}
     boards_obj["ampere"] = boards_obj["volta"]
     parser_functions = {
         "kepler": {"metric": parse_nvprof_metrics, "time": parse_nvprof_time, "memory": parse_nvprof_memory},
@@ -204,51 +203,36 @@ def main():
     }
     parser_functions["ampere"] = parser_functions["volta"]
     for board, board_name in boards.items():
-        board_path = f"{PROFILE_DATA_PATH}/{board}_profile"
+        board_path = f"{common.PROFILE_DATA_PATH}/{board}_profile"
         for app in BENCHMARKS:
-            app_parameters = BENCHMARKS[app]
             parse_metrics = parser_functions[board]["metric"]
             parse_time = parser_functions[board]["time"]
             parse_memory = parser_functions[board]["memory"]
-            # Loop through each compiler
-            for compiler_config in COMPILERS:
-                # Loop for all options, including the default
-                all_flags = ALL_FLAGS + [DEFAULT_OPTC]
-                for flag in all_flags:
-                    if app_parameters:
-                        flag_processed = flag
-                        if "FLAG_PARSER" in app_parameters:
-                            flag_processed = app_parameters["FLAG_PARSER"](flag_processed)
-                        flag_parsed = re.sub("-*=*[ ]*\"*", "", flag_processed)
-                        cuda_version = compiler_config["NVCC"]
-                        object_profiler = boards_obj[board](make_parameters="", app_dir="", app=app,
-                                                            metrics="", cuda_version=cuda_version,
-                                                            log_base_path=board_path, flag=flag_parsed,
-                                                            board=board_name, logger=logger)
-                        csv_time_path = object_profiler.get_log_name(target="time")
-                        check_time = os.path.isfile(csv_time_path)
-                        # IF time exists the others also exists
-                        if check_time:
-                            # Parse the time ---------------------------------------------------------------------------
-                            execution_time, kernel_time_weights = parse_time(csv_path=csv_time_path)
-                            # Parse the Metrics ------------------------------------------------------------------------
-                            csv_metrics_path = object_profiler.get_log_name(target="metrics")
-                            metrics_dict = parse_metrics(csv_path=csv_metrics_path,
-                                                         kernel_time_weights=kernel_time_weights)
-                            # Parse the memory -------------------------------------------------------------------------
-                            csv_memory_path = object_profiler.get_log_name(target="memory")
-                            memory_dict = parse_memory(csv_path=csv_memory_path,
-                                                       kernel_time_weights=kernel_time_weights)
-                            line_dict = {"board": board, "app": app, "nvcc_version": compiler_config['NVCC'],
-                                         "flag": flag_processed, "execution_time": execution_time,
-                                         **metrics_dict, **memory_dict}
-                            list_final_metrics.append(line_dict)
-                        else:
-                            print("NOT NEEDED", csv_time_path)
+            object_profiler = boards_obj[board](make_parameters="", app_dir="", app=app, metrics="",
+                                                log_base_path=board_path, board=board_name)
+            csv_time_path = object_profiler.get_log_name(target="time")
+            check_time = os.path.isfile(csv_time_path)
+            # IF time exists, the others also exist
+            if check_time:
+                # Parse the time ---------------------------------------------------------------------------
+                execution_time, kernel_time_weights = parse_time(csv_path=csv_time_path)
+                # Parse the Metrics ------------------------------------------------------------------------
+                csv_metrics_path = object_profiler.get_log_name(target="metrics")
+                metrics_dict = parse_metrics(csv_path=csv_metrics_path,
+                                             kernel_time_weights=kernel_time_weights)
+                # Parse the memory -------------------------------------------------------------------------
+                csv_memory_path = object_profiler.get_log_name(target="memory")
+                memory_dict = parse_memory(csv_path=csv_memory_path,
+                                           kernel_time_weights=kernel_time_weights)
+                line_dict = {"board": board, "app": app, "nvcc_version": "11.7",
+                             "execution_time": execution_time, **metrics_dict, **memory_dict}
+                list_final_metrics.append(line_dict)
+            else:
+                print("NOT NEEDED", csv_time_path)
 
     final_df = pd.DataFrame(list_final_metrics)
     print(final_df)
-    final_df.to_csv(FINAL_PROFILE_DATABASE, index=False)
+    final_df.to_csv(common.FINAL_PROFILE_DATABASE, index=False)
 
 
 if __name__ == '__main__':
