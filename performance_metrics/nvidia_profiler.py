@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-import asyncio
 import datetime
 import logging
 import os
@@ -11,19 +10,7 @@ import common
 import profiler_class
 
 DEFAULT_LOG = str(os.path.basename(__file__)).upper().replace(".PY", "")
-
-
-async def task_coroutine(log_path, log_interval):
-    nvidia_smi_cmd = ("nvidia-smi --query-gpu=power.draw,clocks.sm,clocks.mem,clocks.gr "
-                      f"--format=csv -l {log_interval} > {log_path} 2>&1")
-    os.system(f"echo '' > {log_path}")
-    try:
-        print('executing the nvidia-smi logging')
-        os.system(nvidia_smi_cmd)
-    except asyncio.CancelledError as e:
-        assert os.system(f"pkill -9 -f nvidia-smi") == 0, "Command to kill nvidia-smi failed"
-        print(f'received request to cancel with: {e}')
-
+SCRIPT_PATH = os.path.dirname(os.path.abspath(__file__))
 
 def get_correct_profiler_object(gpu_name) -> typing.Type[
     typing.Union[profiler_class.ProfilerNsight, profiler_class.ProfilerNvprof]
@@ -34,7 +21,14 @@ def get_correct_profiler_object(gpu_name) -> typing.Type[
         return profiler_class.ProfilerNvprof
 
 
-async def profile_all():
+def clean_last_profile(app_binary, logger):
+    # Clean the last profiling
+    for to_clean in [app_binary, "nvprof", "nv-nsight-cu-cli", "nvcc"]:
+        common.execute_cmd(f"if pgrep  {to_clean}; then pkill  {to_clean}; fi", logger=logger)
+    common.execute_cmd("sync", logger=logger)
+
+
+def profile_all():
     # create logger
     logger = logging.getLogger(DEFAULT_LOG)
     logger.setLevel(logging.DEBUG)
@@ -46,17 +40,13 @@ async def profile_all():
 
     # Check which GPU I'm executing
     gpu_name = os.popen("nvidia-smi --query-gpu=gpu_name --format=csv,noheader").read().strip()
-    script_path = os.path.dirname(os.path.abspath(__file__))
     # The files will be saved on this repository
-    log_folder = f"{script_path}/../data/performance_metrics"
+    log_folder = f"{SCRIPT_PATH}/../data/performance_metrics"
     if not os.path.isdir(log_folder):
         os.mkdir(log_folder)
     logger.debug(f"GPU:{gpu_name}")
-    # Set the asynchronous task to log frequency
-    # create and schedule the task
-    task = asyncio.create_task(task_coroutine(log_path=f"{log_folder}/nvidia_smi.log", log_interval=5))
 
-    app_dir = f"{script_path}/.."
+    app_dir = f"{SCRIPT_PATH}/.."
     tic = time.time()
     # Loop through each benchmark
     for model_name, app_parameters in common.BENCHMARKS.items():
@@ -74,24 +64,9 @@ async def profile_all():
             profiler_obj.profile()
             clean_last_profile(app_binary=app_binary, logger=logger)
 
-    was_cancelled = task.cancel('Stop Right Now')
-    # report whether the cancel request was successful
-    logger.debug(f'was canceled: {was_cancelled}')
-    # wait a moment
-    await asyncio.sleep(0.1)
-    # check the status of the task
-    logger.debug(f'canceled: {task.cancelled()}')
     toc = time.time()
     logger.debug(f"Time necessary to process the profile {datetime.timedelta(seconds=(toc - tic))}")
     # execute_cmd("sudo shutdown -h now", logger=logger)
 
-
-def clean_last_profile(app_binary, logger):
-    # Clean the last profiling
-    for to_clean in [app_binary, "nvprof", "nv-nsight-cu-cli", "nvcc"]:
-        common.execute_cmd(f"if pgrep  {to_clean}; then pkill  {to_clean}; fi", logger=logger)
-    common.execute_cmd("sync", logger=logger)
-
-
 if __name__ == '__main__':
-    asyncio.run(profile_all())
+    profile_all()
