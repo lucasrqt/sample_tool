@@ -153,7 +153,7 @@ def main():
     sampler_generator.manual_seed(args.seed)
     # initializing the dataset
     test_set = ImageNet(
-        root=configs.DATA_PATH.replace("lucasroquet", ),
+        root=configs.DATA_PATH.replace("lucasroquet", os.getlogin()),
         transform=transforms,
         split="val",
     )

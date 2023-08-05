@@ -1,5 +1,11 @@
 import os
+import sys
 from inspect import getframeinfo, stack
+
+sys.path.insert(0, '../')
+import configs
+
+APP_NAME = "perf_measure.py"
 
 PROFILE_DATA_PATH = "data/performance_metrics"
 FINAL_PROFILE_DATABASE = f"{PROFILE_DATA_PATH}/final_profile_processed.csv"
@@ -20,6 +26,18 @@ PASCAL = {"Quadro P2000": 60}
 AMPERE = {"NVIDIA GeForce RTX 3060 Ti": 86}
 ALL_GPUS = {**PASCAL, **AMPERE}
 CUDA_VERSION = "11.7"
+
+PROFILE_METRICS_ITERATIONS = 5
+PROFILE_TIME_ITERATIONS = 50
+
+BENCHMARKS = {
+    k: dict(
+        SUPPORTED_GPUS=ALL_GPUS,
+        EXEC_PARAMETERS=f"--{hardening} --model {k} --iterations {PROFILE_METRICS_ITERATIONS}",
+        APP_BIN="perf_measure.py"
+    )
+    for k in configs.MODELS for hardening in ["replace-id", "no-replace-id"]
+}
 
 ################################################################
 # Metrics
@@ -156,67 +174,3 @@ EVENTS_NSIGHT_CLI = {
 }
 
 METRICS_NSIGHT_CLI = {**QUANTITATIVE_METRICS_NSIGHT_CLI, **PERFORMANCE_METRICS_NSIGHT_CLI}
-
-# Classification ViTs
-# Base from the paper
-VIT_BASE_PATCH16_224 = "vit_base_patch16_224"
-VIT_BASE_PATCH16_384 = "vit_base_patch16_384"
-# Same model as before see https://github.com/huggingface/pytorch-image-models/
-# blob/51b262e2507c50b277b5f6caa0d6bb7a386cba2e/timm/models/vision_transformer.py#L1864
-VIT_BASE_PATCH32_224_SAM = "vit_base_patch32_224.sam"
-VIT_BASE_PATCH32_384 = "vit_base_patch32_384"
-
-# Large models
-# https://pypi.org/project/timm/0.8.19.dev0/
-VIT_LARGE_PATCH14_CLIP_336 = "vit_large_patch14_clip_336.laion2b_ft_in12k_in1k"
-VIT_LARGE_PATCH14_CLIP_224 = "vit_large_patch14_clip_224.laion2b_ft_in12k_in1k"
-# Huge models
-VIT_HUGE_PATCH14_CLIP_336 = "vit_huge_patch14_clip_336.laion2b_ft_in12k_in1k"
-VIT_HUGE_PATCH14_CLIP_224 = "vit_huge_patch14_clip_224.laion2b_ft_in12k_in1k"
-# Max vit
-# https://huggingface.co/timm/maxvit_large_tf_384.in21k_ft_in1k
-# https://huggingface.co/timm/maxvit_large_tf_512.in21k_ft_in1k
-MAXVIT_LARGE_TF_384 = 'maxvit_large_tf_384.in21k_ft_in1k'
-MAXVIT_LARGE_TF_512 = 'maxvit_large_tf_512.in21k_ft_in1k'
-
-# SwinV2
-# https://huggingface.co/timm/swinv2_base_window12to16_192to256.ms_in22k_ft_in1k
-# https://huggingface.co/timm/swinv2_base_window12to24_192to384.ms_in22k_ft_in1k
-# https://huggingface.co/timm/swinv2_large_window12to16_192to256.ms_in22k_ft_in1k
-# https://huggingface.co/timm/swinv2_large_window12to24_192to384.ms_in22k_ft_in1k
-SWINV2_BASE_WINDOW12TO16_192to256_22KFT1K = 'swinv2_base_window12to16_192to256.ms_in22k_ft_in1k'
-SWINV2_BASE_WINDOW12TO24_192to384_22KFT1K = 'swinv2_base_window12to24_192to384.ms_in22k_ft_in1k'
-SWINV2_LARGE_WINDOW12TO16_192to256_22KFT1K = 'swinv2_large_window12to16_192to256.ms_in22k_ft_in1k'
-SWINV2_LARGE_WINDOW12TO24_192to384_22KFT1K = 'swinv2_large_window12to24_192to384.ms_in22k_ft_in1k'
-
-# EVA
-# https://huggingface.co/timm/eva02_large_patch14_448.mim_m38m_ft_in1k
-EVA_LARGE_PATCH14_448_MIM = "eva02_large_patch14_448.mim_in22k_ft_in22k_in1k"
-EVA_BASE_PATCH14_448_MIM = "eva02_base_patch14_448.mim_in22k_ft_in22k_in1k"
-EVA_SMALL_PATCH14_448_MIN = "eva02_small_patch14_336.mim_in22k_ft_in1k"
-
-BENCHMARKS = [
-    VIT_BASE_PATCH16_224,
-    VIT_BASE_PATCH32_224_SAM,
-    VIT_BASE_PATCH16_384,
-    VIT_LARGE_PATCH14_CLIP_336,
-    VIT_LARGE_PATCH14_CLIP_224,
-    VIT_HUGE_PATCH14_CLIP_336,
-    VIT_HUGE_PATCH14_CLIP_224,
-    MAXVIT_LARGE_TF_384,
-    MAXVIT_LARGE_TF_512,
-    SWINV2_LARGE_WINDOW12TO16_192to256_22KFT1K,
-    SWINV2_LARGE_WINDOW12TO24_192to384_22KFT1K,
-    SWINV2_BASE_WINDOW12TO16_192to256_22KFT1K,
-    SWINV2_BASE_WINDOW12TO24_192to384_22KFT1K,
-    EVA_LARGE_PATCH14_448_MIM,
-    EVA_BASE_PATCH14_448_MIM,
-    EVA_SMALL_PATCH14_448_MIN,
-]
-
-
-BENCHMARKS = {
-    k: dict(SUPPORTED_GPUS=ALL_GPUS, EXEC_PARAMETERS=f"--{hardening} -model {k}", APP_BIN="perf_measure.py")
-    for k in BENCHMARKS for hardening in ["replace-id", "no-replace-id"]
-}
-

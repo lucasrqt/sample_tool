@@ -1,5 +1,6 @@
 import abc
 import os
+import re
 
 import common
 
@@ -8,9 +9,8 @@ NSIGHT_PROFILE_SECTIONS = ["LaunchStats", "SpeedOfLight", "Occupancy", "Schedule
 
 
 class Profiler(abc.ABC):
-    # _TIME_ITERATIONS_COUNT = 30
-
-    def __init__(self, execute_parameters, app, app_dir, metrics, events, cuda_version, log_base_path, board, logger):
+    def __init__(self, execute_parameters, app, app_dir, metrics, events, cuda_version, log_base_path, model, board,
+                 logger):
         self._app = app
         self._app_dir = app_dir
         self._metrics = metrics
@@ -21,13 +21,14 @@ class Profiler(abc.ABC):
         self._cuda_version = cuda_version
         self._logger = logger
         self._board = board.replace(" ", "")
+        self._model = model
         self._base_execute_cmd = f"eval LD_LIBRARY_PATH={self._cuda_path}"
         self._base_execute_cmd += "/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}} "
         self._app_make_execute = f"{self._app_dir}/{self._app} {execute_parameters} "
 
     def _log_name(self, target, profiler_tool):
         log_name = f"{self._log_base_path}/{profiler_tool}_log_{target}"
-        log_name += f"_{self._app}_{self._cuda_version}_{self._board}.csv"
+        log_name += f"_{self._model}_{self._app}_{self._cuda_version}_{self._board}.csv"
         return log_name
 
     @abc.abstractmethod
@@ -79,7 +80,8 @@ class ProfilerNvprof(Profiler):
         log_path = self._log_name(target="time", profiler_tool=self._profiler_tool)
         profiler_cmd = f"{self._base_execute_cmd} --trace gpu --profile-api-trace none {self._app_make_execute} "
         profiler_cmd += f"> {log_path} 2>&1"
-        # profiler_cmd = re.sub(r"ITERATIONS=(\d+)", f"ITERATIONS={self._TIME_ITERATIONS_COUNT}", profiler_cmd)
+        profiler_cmd = re.sub(r"--iterations (\d+)",
+                              f"--iterations {common.PROFILE_TIME_ITERATIONS}", profiler_cmd)
         return profiler_cmd, log_path
 
     def _memory_profiler_cmd(self):
@@ -127,8 +129,8 @@ class ProfilerNsight(Profiler):
         time_metrics = ",".join([f"gpu__time_active.{i},gpu__time_duration.{i}" for i in ["min", "max", "avg", "sum"]])
         profiler_cmd = f"{self._base_execute_cmd} --metrics {time_metrics}"
         profiler_cmd += f" {self._app_make_execute} > {log_path}"
-        # Replace time to measure TIME_ITERATIONS_COUNT
-        # profiler_cmd = re.sub(r"ITERATIONS=(\d+)", f"ITERATIONS={self._TIME_ITERATIONS_COUNT}", profiler_cmd)
+        profiler_cmd = re.sub(r"--iterations (\d+)",
+                              f"--iterations {common.PROFILE_TIME_ITERATIONS}", profiler_cmd)
         return profiler_cmd, log_path
 
     def _memory_profiler_cmd(self):
