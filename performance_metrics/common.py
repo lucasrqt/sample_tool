@@ -83,15 +83,15 @@ QUANTITATIVE_METRICS_NSIGHT_CLI = {
 
 PERFORMANCE_METRICS_NSIGHT_CLI = {
     # Performance metrics
-    "alu_fu_utilization": ["smsp__pipe_fma_cycles_active.avg.pct_of_peak_sustained_active",
-                           "smsp__inst_executed_pipe_xu.avg.pct_of_peak_sustained_active",
-                           "sm__pipe_tensor_op_hmma_cycles_active.avg.pct_of_peak_sustained_active",
-                           "smsp__inst_executed_pipe_fp16.sum",
-                           "smsp__inst_executed_pipe_fp64.avg.pct_of_peak_sustained_active"],
+    # "alu_fu_utilization": ["smsp__pipe_fma_cycles_active.avg.pct_of_peak_sustained_active",
+    #                        "smsp__inst_executed_pipe_xu.avg.pct_of_peak_sustained_active",
+    #                        "sm__pipe_tensor_op_hmma_cycles_active.avg.pct_of_peak_sustained_active",
+    #                        "smsp__inst_executed_pipe_fp16.sum",
+    #                        "smsp__inst_executed_pipe_fp64.avg.pct_of_peak_sustained_active"],
     "achieved_occupancy": ["sm__warps_active.avg.pct_of_peak_sustained_active"],
     "ipc": ["sm__inst_executed.avg.per_cycle_active"],
     "ldst_fu_utilization": ["smsp__inst_executed_pipe_lsu.avg.pct_of_peak_sustained_active"],
-    "cf_fu_utilization": None,
+    # "cf_fu_utilization": None,
     # "tex_fu_utilization": ["smsp__inst_executed_pipe_tex.avg.pct_of_peak_sustained_active"],
     # "l1_shared_utilization": ["l1tex__data_pipe_lsu_wavefronts_mem_shared.avg.pct_of_peak_sustained_elapsed"],
     # "l2_utilization": ["lts__t_sectors.avg.pct_of_peak_sustained_elapsed"],
@@ -104,35 +104,35 @@ PERFORMANCE_METRICS_NSIGHT_CLI = {
     # "issued_ipc": ["sm__inst_issued.avg.per_cycle_active"],
     # Efficiency metrics
     "sm_efficiency": ["smsp__cycles_active.avg.pct_of_peak_sustained_elapsed"],
-    "sm_efficiency_instance": None,
-    "shared_efficiency": None,
+    # "sm_efficiency_instance": None,
+    # "shared_efficiency": None,
     # "gld_efficiency": None, Does not work with FASTER-RCNN
-    "gst_efficiency": None,
+    # "gst_efficiency": None,
     # "warp_execution_efficiency": ["smsp__thread_inst_executed_per_inst_executed.ratio"],
     # "warp_nonpred_execution_efficiency": ["smsp__thread_inst_executed_per_inst_executed.pct"],
     # "eligible_warps_per_cycle": ["smsp__warps_eligible.sum.per_cycle_active"],
     # Penalty metrics
     # -- Replay
-    "inst_replay_overhead": None,
-    "shared_replay_overhead": None,
-    "global_replay_overhead": None,
-    "global_cache_replay_overhead": None,
-    "local_replay_overhead": None,
-    "atomic_replay_overhead": None,
+    # "inst_replay_overhead": None,
+    # "shared_replay_overhead": None,
+    # "global_replay_overhead": None,
+    # "global_cache_replay_overhead": None,
+    # "local_replay_overhead": None,
+    # "atomic_replay_overhead": None,
     # -- HIT
-    "l1_cache_global_hit_rate": None, "l1_cache_local_hit_rate": None,
+    # "l1_cache_global_hit_rate": None, "l1_cache_local_hit_rate": None,
     # "tex_cache_hit_rate": ["l1tex__t_sector_hit_rate.pct"],
     # keep in mind that it is not the directly flag related for these
-    "l2_l1_read_hit_rate": None,
+    # "l2_l1_read_hit_rate": None,
     # l2 texture does not work
     # "l2_texture_read_hit_rate": ["l2_tex_read_hit_rate"],
-    "nc_cache_global_hit_rate": None,
+    # "nc_cache_global_hit_rate": None,
     # # Quantitative metrics (less significant)
     # "inst_issued": ["smsp__inst_issued.sum"],
     "inst_executed": ["smsp__inst_executed.sum"],
-    "cf_issued": None,
+    # "cf_issued": None,
     "cf_executed": ["smsp__inst_executed_pipe_cbu.sum", "smsp__inst_executed_pipe_adu.sum"],
-    "ldst_issued": None, "ldst_executed": None,
+    # "ldst_issued": None, "ldst_executed": None,
 }
 
 # -- Stall
