@@ -194,11 +194,11 @@ def parse_nvprof_memory(csv_path, kernel_time_weights):
 
 def main():
     list_final_metrics = list()
-    boards = {"kepler": "NVIDIATeslaK40c", "volta": "NVIDIATITANV", "ampere": "NVIDIAGeForceRTX3060Ti"}
-    boards_obj = {"kepler": profiler_class.ProfilerNvprof, "volta": profiler_class.ProfilerNsight}
+    boards = {"pascal": "QuadroP2000", "volta": "NVIDIATITANV", "ampere": "NVIDIAGeForceRTX3060Ti"}
+    boards_obj = {"pascal": profiler_class.ProfilerNvprof, "volta": profiler_class.ProfilerNsight}
     boards_obj["ampere"] = boards_obj["volta"]
     parser_functions = {
-        "kepler": {"metric": parse_nvprof_metrics, "time": parse_nvprof_time, "memory": parse_nvprof_memory},
+        "pascal": {"metric": parse_nvprof_metrics, "time": parse_nvprof_time, "memory": parse_nvprof_memory},
         "volta": {"metric": parse_nsight_metrics, "time": parse_nsight_time, "memory": parse_nsight_memory},
     }
     parser_functions["ampere"] = parser_functions["volta"]
