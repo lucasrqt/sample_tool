@@ -1,0 +1,7 @@
+BFM,type,Avg. Critical SDC
+Single bit-flip,U.,0.971125
+Single bit-flip,H.,0.255416667
+Random value,U.,9.605833333
+Random value,H.,2.405833333
+Warp random value,U.,15.4
+Warp random value,H.,4.183333333
