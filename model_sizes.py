@@ -24,30 +24,18 @@ def main():
             split="val",
         )
         # initializing the dataloader
+        
         data_loader = DataLoader(test_set, batch_size=5)
         data_iter = iter(data_loader)
         inputs, label = next(data_iter)
         inputs = inputs.to("cuda")
+        torch.cuda.synchronize(device=torch.device("cuda"))
 
-        with profile(activities=[torch.profiler.ProfilerActivity.CUDA],      
-            profile_memory=True,
-            record_shapes=True,) as prof:
-            model(inputs)
-        print(model_name)
-        print(prof.key_averages().table(row_limit=7))
+        size = torch.cuda.memory_allocated(device=torch.cuda.current_device())/1024**2
+
+        print(f"{model_name}: {round(size,0)}MB")
 
         del inputs, model
-
-        # param_size = 0
-        # for param in model.parameters():
-        #     param_size += param.nelement() * param.element_size()
-
-        # buffer_size = 0
-        # for buffer in model.buffers():
-        #     buffer_size += buffer.nelement() * buffer.element_size()
-
-        # size_all = (param_size + buffer_size) / 1024**2
-        # print('{}: {:.3f}MB'.format(model_name, size_all))
 
 
 if __name__ == '__main__':
