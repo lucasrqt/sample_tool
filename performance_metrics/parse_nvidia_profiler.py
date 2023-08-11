@@ -6,7 +6,6 @@ import pandas as pd
 
 import common
 import profiler_class
-import profiler_flags
 
 VOLTA_THREAD_PER_WARP = 32
 BENCHMARKS = {
@@ -99,11 +98,11 @@ def parse_nvprof_time(csv_path):
 def parse_nsight_metrics(csv_path, kernel_time_weights):
     df = read_csv(csv_path=csv_path)
     line_dict = dict()
-    filter_metrics = [y for x in profiler_flags.METRICS_NSIGHT_CLI_SM70.values() if x for y in x]
+    filter_metrics = [y for x in common.METRICS_NSIGHT_CLI.values() if x for y in x]
     # df["weights"] = df["Kernel Name"].apply(lambda x: kernel_time_weights.loc[x]).astype(float)
     df = df[df["Metric Name"].isin(filter_metrics)]
 
-    for nvprof_metric, nsight_set in profiler_flags.QUANTITATIVE_METRICS_NSIGHT_CLI.items():
+    for nvprof_metric, nsight_set in common.QUANTITATIVE_METRICS_NSIGHT_CLI.items():
         # sum_of_metrics = 0
         # if nsight_set:
         # # UNCOMMENT TO CHECK ANY PROBLEM
@@ -115,15 +114,14 @@ def parse_nsight_metrics(csv_path, kernel_time_weights):
 
     # Occupancy and ipc
     occupancy_df = df[
-        df["Metric Name"].isin(profiler_flags.PERFORMANCE_METRICS_NSIGHT_CLI["achieved_occupancy"])].copy()
-    ipc_df = df[df["Metric Name"].isin(profiler_flags.PERFORMANCE_METRICS_NSIGHT_CLI["ipc"])]
+        df["Metric Name"].isin(common.PERFORMANCE_METRICS_NSIGHT_CLI["achieved_occupancy"])].copy()
+    ipc_df = df[df["Metric Name"].isin(common.PERFORMANCE_METRICS_NSIGHT_CLI["ipc"])]
 
     # Divide by 100 if it is a percentage. Same as nvprof
     occupancy_df["Metric Value"] = occupancy_df.apply(
         lambda r: (float(r["Metric Value"]) / 100 if r["Metric Unit"] == "%" else float(r["Metric Value"])),
         axis="columns")
 
-    # TODO: Ask Paolo if IP and OCC are wt_mean vs mean vs max
     # occupancy_df["wt_mean"] = occupancy_df["weights"] * occupancy_df["Metric Value"]
     # Mean
     # line_dict["achieved_occupancy"] = occupancy_df["wt_mean"].mean()
@@ -136,7 +134,7 @@ def parse_nsight_metrics(csv_path, kernel_time_weights):
 
 def parse_nvprof_metrics(csv_path, kernel_time_weights):
     df = read_csv(csv_path=csv_path)
-    metric_dict = df[df["Metric Name"].isin(profiler_flags.QUANTITATIVE_METRICS_NSIGHT_CLI.keys())]
+    metric_dict = df[df["Metric Name"].isin(common.QUANTITATIVE_METRICS_NSIGHT_CLI.keys())]
     metric_dict = metric_dict[["Metric Name", "Avg"]].groupby("Metric Name").sum().sum(axis=1)
     line_dict = metric_dict.to_dict()
     # df["weights"] = df["Kernel"].apply(lambda x: kernel_time_weights.loc[x]).astype(float)
@@ -192,14 +190,33 @@ def parse_nvprof_memory(csv_path, kernel_time_weights):
     return memory_dict
 
 
+def parse_nvprof_events():
+    raise NotImplemented
+
+
+def parse_nsight_events():
+    raise NotImplemented
+
+
 def main():
     list_final_metrics = list()
-    boards = {"pascal": "QuadroP2000", "volta": "NVIDIATITANV", "ampere": "NVIDIAGeForceRTX3060Ti"}
+    # Select which boards to parse
+    boards = {
+        "pascal": "QuadroP2000",
+        "volta": "NVIDIATITANV",
+        "ampere": "NVIDIAGeForceRTX3060Ti"
+    }
     boards_obj = {"pascal": profiler_class.ProfilerNvprof, "volta": profiler_class.ProfilerNsight}
     boards_obj["ampere"] = boards_obj["volta"]
     parser_functions = {
-        "pascal": {"metric": parse_nvprof_metrics, "time": parse_nvprof_time, "memory": parse_nvprof_memory},
-        "volta": {"metric": parse_nsight_metrics, "time": parse_nsight_time, "memory": parse_nsight_memory},
+        "pascal": {
+            "metric": parse_nvprof_metrics, "time": parse_nvprof_time, "memory": parse_nvprof_memory,
+            "events": parse_nvprof_events
+        },
+        "volta": {
+            "metric": parse_nsight_metrics, "time": parse_nsight_time, "memory": parse_nsight_memory,
+            "events": parse_nsight_events
+        },
     }
     parser_functions["ampere"] = parser_functions["volta"]
     for board, board_name in boards.items():

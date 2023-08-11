@@ -67,6 +67,11 @@ class Profiler(abc.ABC):
         cmd, memory_log_path = self._memory_profiler_cmd()
         common.execute_cmd(cmd=cmd, logger=self._logger)
         self._logger.debug(f"Saved at {memory_log_path}")
+        # Get the execution cycles
+        self._logger.debug(f"Profiling events app {self._app}")
+        cmd, events_log_path = self._events_profiler_cmd()
+        common.execute_cmd(cmd=cmd, logger=self._logger)
+        self._logger.debug(f"Saved at {events_log_path}")
 
 
 class ProfilerNvprof(Profiler):
@@ -121,7 +126,7 @@ class ProfilerNsight(Profiler):
     def _events_profiler_cmd(self):
         events = ",".join([",".join(value) for key, value in self._events.items() if value is not None])
         log_path = self._log_name(target="events", profiler_tool=self._profiler_tool)
-        profiler_cmd = f"{self._base_execute_cmd} --events {events} {self._app_make_execute} > {log_path}"
+        profiler_cmd = f"{self._base_execute_cmd} --metrics {events} {self._app_make_execute} > {log_path}"
         return profiler_cmd, log_path
 
     def _time_profiler_cmd(self):

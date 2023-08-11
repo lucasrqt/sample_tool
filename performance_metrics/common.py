@@ -23,9 +23,12 @@ def execute_cmd(cmd, logger):
 
 # GPU name : SMS
 PASCAL = {"Quadro P2000": 60}
+VOLTA = {"NVIDIA TITAN V": 70}
 AMPERE = {"NVIDIA GeForce RTX 3060 Ti": 86}
-ALL_GPUS = {**PASCAL, **AMPERE}
+ALL_GPUS = {**PASCAL, **VOLTA, **AMPERE}
 CUDA_VERSION = "11.7"
+NVPROF_GPUS = list(PASCAL.keys())
+NSIGHT_GPUS = list(VOLTA.keys()) + list(AMPERE.keys())
 
 PROFILE_METRICS_ITERATIONS = 5
 PROFILE_TIME_ITERATIONS = 50
