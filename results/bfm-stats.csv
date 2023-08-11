@@ -1,0 +1,25 @@
+Family Model,BFM,Type,Avg. Critical SDC
+Original,Single bit-flip,U.,0.766
+Original,Single bit-flip,H.,0.214
+Original,Random value,U.,8.067
+Original,Random value,H.,3.506
+Original,Warp random value,U.,12.6
+Original,Warp random value,H.,5.64
+EVA,Single bit-flip,U.,2.01675
+EVA,Single bit-flip,H.,0.22325
+EVA,Random value,U.,20.8175
+EVA,Random value,H.,2.5675
+EVA,Warp random value,U.,32.4
+EVA,Warp random value,H.,3.5
+Swin,Single bit-flip,U.,0.66333333
+Swin,Single bit-flip,H.,0.51
+Swin,Random value,U.,4.1116666667
+Swin,Random value,H.,2.06833333
+Swin,Warp random value,U.,5.733333333
+Swin,Warp random value,H.,5
+MaxViT,Single bit-flip,U.,0.9
+MaxViT,Single bit-flip,H.,0
+MaxViT,Random value,U.,10.4825
+MaxViT,Random value,H.,0
+MaxViT,Warp random value,U.,19.9
+MaxViT,Warp random value,H.,0
