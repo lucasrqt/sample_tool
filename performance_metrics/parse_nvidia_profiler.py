@@ -228,27 +228,29 @@ def main():
     }
 
     for board, board_name in boards.items():
-        for app in common.BENCHMARKS:
-            parse_metrics = parser_functions[board]["metric"]
-            parse_time = parser_functions[board]["time"]
-            parse_memory = parser_functions[board]["memory"]
-            profiler_obj = boards_obj[board](
-                execute_parameters="", app_dir="", app=common.APP_NAME, metrics="", events="",
-                cuda_version=common.CUDA_VERSION, log_base_path=common.PROFILE_DATA_PATH, model=app, board=board_name,
-                logger=logger
-            )
-            csv_time_path = profiler_obj.get_log_name(target="time")
-            # Parse the time ---------------------------------------------------------------------------
-            execution_time, kernel_time_weights = parse_time(csv_path=csv_time_path)
-            # Parse the Metrics ------------------------------------------------------------------------
-            csv_metrics_path = profiler_obj.get_log_name(target="metrics")
-            metrics_dict = parse_metrics(csv_path=csv_metrics_path, kernel_time_weights=kernel_time_weights)
-            # Parse the memory -------------------------------------------------------------------------
-            csv_memory_path = profiler_obj.get_log_name(target="memory")
-            memory_dict = parse_memory(csv_path=csv_memory_path, kernel_time_weights=kernel_time_weights)
-            line_dict = {"board": board, "app": app, "nvcc_version": "11.7", "execution_time": execution_time,
-                         **metrics_dict, **memory_dict}
-            list_final_metrics.append(line_dict)
+        for model_name in common.BENCHMARKS:
+            for hardening in ["replace-id", "no-replace-id"]:
+                new_model_name = f"{model_name}_{hardening}"
+                parse_metrics = parser_functions[board]["metric"]
+                parse_time = parser_functions[board]["time"]
+                parse_memory = parser_functions[board]["memory"]
+                profiler_obj = boards_obj[board](
+                    execute_parameters="", app_dir="", app=common.APP_NAME, metrics="", events="",
+                    cuda_version=common.CUDA_VERSION, log_base_path=common.PROFILE_DATA_PATH, model=model_name,
+                    board=board_name, logger=logger
+                )
+                csv_time_path = profiler_obj.get_log_name(target="time")
+                # Parse the time ---------------------------------------------------------------------------
+                execution_time, kernel_time_weights = parse_time(csv_path=csv_time_path)
+                # Parse the Metrics ------------------------------------------------------------------------
+                csv_metrics_path = profiler_obj.get_log_name(target="metrics")
+                metrics_dict = parse_metrics(csv_path=csv_metrics_path, kernel_time_weights=kernel_time_weights)
+                # Parse the memory -------------------------------------------------------------------------
+                csv_memory_path = profiler_obj.get_log_name(target="memory")
+                memory_dict = parse_memory(csv_path=csv_memory_path, kernel_time_weights=kernel_time_weights)
+                line_dict = {"board": board, "app": model_name, "nvcc_version": "11.7",
+                             "execution_time": execution_time, **metrics_dict, **memory_dict}
+                list_final_metrics.append(line_dict)
 
     final_df = pd.DataFrame(list_final_metrics)
     print(final_df)

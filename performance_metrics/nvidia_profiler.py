@@ -40,7 +40,6 @@ def profile_all():
     app_dir = f"{SCRIPT_PATH}/.."
     tic = time.time()
     # Loop through each benchmark
-    app_name = common.APP_NAME.replace(".py", "")
     try:
         for model_name, app_parameters in common.BENCHMARKS.items():
             # Check if it is empty and the GPU is supported
@@ -49,13 +48,13 @@ def profile_all():
             app_binary = app_parameters["APP_BIN"]
             for hardening in ["replace-id", "no-replace-id"]:
                 exec_parameters = app_parameters["EXEC_PARAMETERS"] + f" --{hardening}"
-                new_app_name = f"{app_name}_{hardening}"
-                logger.debug(f"Profiling for the {model_name} + {hardening}")
+                new_model_name = f"{model_name}_{hardening}"
+                logger.debug(f"Profiling for the {new_model_name}")
                 profiler = profiler_class.ProfilerNsight if gpu_name in common.NSIGHT_GPUS else profiler_class.ProfilerNvprof
-                profiler_obj = profiler(execute_parameters=exec_parameters, app_dir=app_dir, app=new_app_name,
+                profiler_obj = profiler(execute_parameters=exec_parameters, app_dir=app_dir, app=common.APP_NAME,
                                         metrics=common.METRICS_NSIGHT_CLI, events=common.EVENTS_NSIGHT_CLI,
                                         cuda_version=common.CUDA_VERSION,
-                                        log_base_path=log_folder, model=model_name, board=gpu_name, logger=logger)
+                                        log_base_path=log_folder, model=new_model_name, board=gpu_name, logger=logger)
                 profiler_obj.profile()
                 clean_last_profile(app_binary=app_binary, logger=logger)
     except KeyboardInterrupt:
