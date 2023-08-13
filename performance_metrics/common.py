@@ -7,8 +7,14 @@ import configs
 
 APP_NAME = "perf_measure.py"
 
-PROFILE_DATA_PATH = "data/performance_metrics"
+# Up to now it is 32 threads per warp
+THREADS_PER_WARP = 32
+
+REPOSITORY_HOME = "/home/fernando/git_research/sample_tool"
+PROFILE_DATA_PATH = f"{REPOSITORY_HOME}/data/performance_metrics"
 FINAL_PROFILE_DATABASE = f"{PROFILE_DATA_PATH}/final_profile_processed.csv"
+NVIDIA_SMI_LOG_PATH = f"{PROFILE_DATA_PATH}/nvidia_smi_data.csv"
+assert os.path.isdir(REPOSITORY_HOME), f"Incorrect home repository:{REPOSITORY_HOME}"
 
 
 def execute_cmd(cmd, logger):
@@ -36,10 +42,9 @@ PROFILE_TIME_ITERATIONS = 50
 BENCHMARKS = {
     k: dict(
         SUPPORTED_GPUS=ALL_GPUS,
-        EXEC_PARAMETERS=f"--{hardening} --model {k} --iterations {PROFILE_METRICS_ITERATIONS}",
+        EXEC_PARAMETERS=f"--model {k} --iterations {PROFILE_METRICS_ITERATIONS}",
         APP_BIN="perf_measure.py"
-    )
-    for k in configs.MODELS for hardening in ["replace-id", "no-replace-id"]
+    ) for k in configs.MODELS
 }
 
 ################################################################

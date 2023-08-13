@@ -1,16 +1,15 @@
 #!/usr/bin/python3
-import os.path
+import logging
+import os
 import re
+import sys
 
 import pandas as pd
 
 import common
 import profiler_class
 
-VOLTA_THREAD_PER_WARP = 32
-BENCHMARKS = {
-
-}
+DEFAULT_LOG = str(os.path.basename(__file__)).upper().replace(".PY", "")
 
 
 def read_csv(csv_path):
@@ -199,53 +198,57 @@ def parse_nsight_events():
 
 
 def main():
+    logger = logging.getLogger(DEFAULT_LOG)
+    logger.setLevel(logging.DEBUG)
+    handler = logging.StreamHandler(sys.stdout)
+    handler.setLevel(logging.DEBUG)
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+
     list_final_metrics = list()
     # Select which boards to parse
     boards = {
-        "pascal": "QuadroP2000",
+        # "pascal": "QuadroP2000",
         "volta": "NVIDIATITANV",
-        "ampere": "NVIDIAGeForceRTX3060Ti"
+        # "ampere": "NVIDIAGeForceRTX3060Ti"
     }
-    boards_obj = {"pascal": profiler_class.ProfilerNvprof, "volta": profiler_class.ProfilerNsight}
-    boards_obj["ampere"] = boards_obj["volta"]
-    parser_functions = {
+    boards_obj = {
+        "pascal": profiler_class.ProfilerNvprof,
+        **{b: profiler_class.ProfilerNsight for b in ["volta", "ampere"]}
+    }
+
+    parser_functions: callable = {
         "pascal": {
             "metric": parse_nvprof_metrics, "time": parse_nvprof_time, "memory": parse_nvprof_memory,
             "events": parse_nvprof_events
         },
-        "volta": {
-            "metric": parse_nsight_metrics, "time": parse_nsight_time, "memory": parse_nsight_memory,
-            "events": parse_nsight_events
-        },
+        **{b: {"metric": parse_nsight_metrics, "time": parse_nsight_time, "memory": parse_nsight_memory,
+               "events": parse_nsight_events} for b in ["volta", "ampere"]},
     }
-    parser_functions["ampere"] = parser_functions["volta"]
+
     for board, board_name in boards.items():
-        board_path = f"{common.PROFILE_DATA_PATH}/{board}_profile"
-        for app in BENCHMARKS:
+        for app in common.BENCHMARKS:
             parse_metrics = parser_functions[board]["metric"]
             parse_time = parser_functions[board]["time"]
             parse_memory = parser_functions[board]["memory"]
-            object_profiler = boards_obj[board](make_parameters="", app_dir="", app=app, metrics="",
-                                                log_base_path=board_path, board=board_name)
-            csv_time_path = object_profiler.get_log_name(target="time")
-            check_time = os.path.isfile(csv_time_path)
-            # IF time exists, the others also exist
-            if check_time:
-                # Parse the time ---------------------------------------------------------------------------
-                execution_time, kernel_time_weights = parse_time(csv_path=csv_time_path)
-                # Parse the Metrics ------------------------------------------------------------------------
-                csv_metrics_path = object_profiler.get_log_name(target="metrics")
-                metrics_dict = parse_metrics(csv_path=csv_metrics_path,
-                                             kernel_time_weights=kernel_time_weights)
-                # Parse the memory -------------------------------------------------------------------------
-                csv_memory_path = object_profiler.get_log_name(target="memory")
-                memory_dict = parse_memory(csv_path=csv_memory_path,
-                                           kernel_time_weights=kernel_time_weights)
-                line_dict = {"board": board, "app": app, "nvcc_version": "11.7",
-                             "execution_time": execution_time, **metrics_dict, **memory_dict}
-                list_final_metrics.append(line_dict)
-            else:
-                print("NOT NEEDED", csv_time_path)
+            profiler_obj = boards_obj[board](
+                execute_parameters="", app_dir="", app=common.APP_NAME, metrics="", events="",
+                cuda_version=common.CUDA_VERSION, log_base_path=common.PROFILE_DATA_PATH, model=app, board=board_name,
+                logger=logger
+            )
+            csv_time_path = profiler_obj.get_log_name(target="time")
+            # Parse the time ---------------------------------------------------------------------------
+            execution_time, kernel_time_weights = parse_time(csv_path=csv_time_path)
+            # Parse the Metrics ------------------------------------------------------------------------
+            csv_metrics_path = profiler_obj.get_log_name(target="metrics")
+            metrics_dict = parse_metrics(csv_path=csv_metrics_path, kernel_time_weights=kernel_time_weights)
+            # Parse the memory -------------------------------------------------------------------------
+            csv_memory_path = profiler_obj.get_log_name(target="memory")
+            memory_dict = parse_memory(csv_path=csv_memory_path, kernel_time_weights=kernel_time_weights)
+            line_dict = {"board": board, "app": app, "nvcc_version": "11.7", "execution_time": execution_time,
+                         **metrics_dict, **memory_dict}
+            list_final_metrics.append(line_dict)
 
     final_df = pd.DataFrame(list_final_metrics)
     print(final_df)

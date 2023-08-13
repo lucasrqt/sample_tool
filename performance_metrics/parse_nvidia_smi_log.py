@@ -1,11 +1,11 @@
 #!/usr/bin/python3
 import pandas as pd
 
-CSV_FILE = "../data/performance_metrics/nvidia_smi_data.csv"
+import common
 
 
 def main():
-    df = pd.read_csv(CSV_FILE)
+    df = pd.read_csv(common.NVIDIA_SMI_LOG_PATH)
     df.columns = df.columns.str.strip()
     # 7.20 W, 139 MHz, 405 MHz, 139 MHz
     df["power.draw [W]"] = df["power.draw [W]"].str.replace(" W", "").astype(float)
