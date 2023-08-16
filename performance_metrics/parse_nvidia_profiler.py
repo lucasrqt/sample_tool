@@ -215,13 +215,7 @@ def parse_nsight_events(csv_path):
 
 
 def main():
-    logger = logging.getLogger(DEFAULT_LOG)
-    logger.setLevel(logging.DEBUG)
-    handler = logging.StreamHandler(sys.stdout)
-    handler.setLevel(logging.DEBUG)
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    handler.setFormatter(formatter)
-    logger.addHandler(handler)
+    logger = common.create_logger(default_log=DEFAULT_LOG)
 
     list_final_metrics = list()
     # Select which boards to parse

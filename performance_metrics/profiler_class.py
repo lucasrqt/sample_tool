@@ -79,7 +79,7 @@ class ProfilerNvprof(Profiler):
         super(ProfilerNvprof, self).__init__(*args, **kwargs)
         self._profiler_tool = "nvprof"
         self._base_execute_cmd += f"{self._cuda_bin}/{self._profiler_tool}  --cpu-thread-tracing off --csv "
-        self._base_execute_cmd += "--profile-child-processes "
+        self._base_execute_cmd += "--profile-child-processes --profile-from-start off"
 
     def _time_profiler_cmd(self):
         log_path = self._log_name(target="time", profiler_tool=self._profiler_tool)
@@ -116,6 +116,7 @@ class ProfilerNsight(Profiler):
         self._profiler_tool = "nv-nsight-cu-cli"
         self._base_execute_cmd += f"{self._cuda_bin}/{self._profiler_tool} --csv --target-processes all "
         self._base_execute_cmd += "--print-fp" if float(self._cuda_version) > 11.0 else "--fp"
+        self._base_execute_cmd += " --profile-from-start off"
 
     def _metrics_profiler_cmd(self):
         metrics = ",".join([",".join(value) for key, value in self._metrics.items() if value is not None])

@@ -1,8 +1,7 @@
 #!/usr/bin/python3
 import datetime
-import logging
 import os
-import sys
+import re
 import time
 
 import common
@@ -18,15 +17,18 @@ def clean_last_profile(app_binary, logger):
     common.execute_cmd("sync", logger=logger)
 
 
+def naive_execution_time_profiling(time_log_path, execute_parameters, logger):
+    cmd = f"eval LD_LIBRARY_PATH=/usr/local/cuda-{common.CUDA_VERSION}"
+    cmd += "/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}} "
+    execute_parameters = re.sub(r"--iterations (\d+)", f"--iterations {common.PROFILE_TIME_ITERATIONS}",
+                                execute_parameters)
+    cmd += f"{common.REPOSITORY_HOME}/{common.APP_NAME} {execute_parameters} > {time_log_path} 2>&1"
+    common.execute_cmd(cmd=cmd, logger=logger)
+
+
 def profile_all():
     # create logger
-    logger = logging.getLogger(DEFAULT_LOG)
-    logger.setLevel(logging.DEBUG)
-    handler = logging.StreamHandler(sys.stdout)
-    handler.setLevel(logging.DEBUG)
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    handler.setFormatter(formatter)
-    logger.addHandler(handler)
+    logger = common.create_logger(default_log=DEFAULT_LOG)
 
     # Check which GPU I'm executing
     gpu_name = os.popen("nvidia-smi --query-gpu=gpu_name --format=csv,noheader").read().strip()
@@ -55,6 +57,9 @@ def profile_all():
                     board=gpu_name, logger=logger
                 )
                 profiler_obj.profile()
+                # Naive exec time prof
+                naive_execution_time_profiling(time_log_path=profiler_obj.get_log_name("time"),
+                                               execute_parameters=exec_parameters, logger=logger)
                 clean_last_profile(app_binary=app_binary, logger=logger)
     except KeyboardInterrupt:
         clean_last_profile(app_binary=common.APP_NAME, logger=logger)

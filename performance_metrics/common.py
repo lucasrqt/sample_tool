@@ -1,3 +1,4 @@
+import logging
 import os
 import sys
 from inspect import getframeinfo, stack
@@ -10,22 +11,11 @@ APP_NAME = "perf_measure.py"
 # Up to now it is 32 threads per warp
 THREADS_PER_WARP = 32
 
-REPOSITORY_HOME = "/home/fernando/git_research/sample_tool"
+REPOSITORY_HOME = "/home/carol/sample_tool"
 PROFILE_DATA_PATH = f"{REPOSITORY_HOME}/data/performance_metrics"
 FINAL_PROFILE_DATABASE = f"{PROFILE_DATA_PATH}/final_profile_processed.csv"
 NVIDIA_SMI_LOG_PATH = f"{PROFILE_DATA_PATH}/nvidia_smi_data.csv"
 assert os.path.isdir(REPOSITORY_HOME), f"Incorrect home repository:{REPOSITORY_HOME}"
-
-
-def execute_cmd(cmd, logger):
-    logger.debug(f"Executing {cmd}")
-    ret = os.system(cmd)
-    caller = getframeinfo(stack()[1][0])
-    if ret != 0:
-        logger.error(f"ERROR AT: {caller.filename}:{caller.lineno} CMD: {cmd}")
-        logger.error(f"Command was not correctly executed error code {ret}")
-        raise ValueError()
-
 
 # GPU name : SMS
 PASCAL = {"Quadro P2000": 60}
@@ -36,7 +26,7 @@ CUDA_VERSION = "11.7"
 NVPROF_GPUS = list(PASCAL.keys())
 NSIGHT_GPUS = list(VOLTA.keys()) + list(AMPERE.keys())
 
-PROFILE_METRICS_ITERATIONS = 5
+PROFILE_METRICS_ITERATIONS = 1
 PROFILE_TIME_ITERATIONS = 50
 
 BENCHMARKS = {
@@ -182,3 +172,24 @@ EVENTS_NSIGHT_CLI = {
 }
 
 METRICS_NSIGHT_CLI = {**QUANTITATIVE_METRICS_NSIGHT_CLI, **PERFORMANCE_METRICS_NSIGHT_CLI}
+
+
+def create_logger(default_log):
+    logger = logging.getLogger(default_log)
+    logger.setLevel(logging.DEBUG)
+    handler = logging.StreamHandler(sys.stdout)
+    handler.setLevel(logging.DEBUG)
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+    return logger
+
+
+def execute_cmd(cmd, logger):
+    logger.debug(f"Executing {cmd}")
+    ret = os.system(cmd)
+    caller = getframeinfo(stack()[1][0])
+    if ret != 0:
+        logger.error(f"ERROR AT: {caller.filename}:{caller.lineno} CMD: {cmd}")
+        logger.error(f"Command was not correctly executed error code {ret}")
+        raise ValueError()
