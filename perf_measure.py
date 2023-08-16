@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-
 import argparse
 import logging
 import os
@@ -11,63 +10,9 @@ from torch.utils.data import DataLoader
 from torchvision.datasets import ImageNet
 
 import configs
-import hardened_identity
+from main import replace_identity
 
 WARM_UP_ITERATIONS = 10
-
-def replace_identity(module, name, model_name):
-    """Recursively put desired module in nn.module module."""
-    # go through all attributes of module nn.module (e.g., network or layer) and put batch norms if present
-    for attr_str in dir(module):
-        target_attr = getattr(module, attr_str)
-        if type(target_attr) == torch.nn.Identity:
-            # print("replaced: ", name, attr_str)
-            new_identity = hardened_identity.HardenedIdentity(model_name)
-            setattr(module, attr_str, new_identity)
-
-    # Iterate through immediate child modules. Note, our code does the recursion no need to use named_modules()
-    for name, immediate_child_module in module.named_children():
-        replace_identity(immediate_child_module, name, model_name)
-
-
-def equal(rhs: torch.Tensor, lhs: torch.Tensor, threshold: float = 0) -> bool:
-    """Compare based or not in a threshold, if a threshold is none then it is equal comparison"""
-    if threshold > 0:
-        return bool(torch.all(torch.le(torch.abs(torch.subtract(rhs, lhs)), threshold)))
-    else:
-        return bool(torch.equal(rhs, lhs))
-
-
-def get_top_k_labels(tensor: torch.tensor, top_k: int) -> torch.tensor:
-    proba = torch.nn.functional.softmax(tensor, dim=1)
-    return torch.topk(proba, k=top_k).indices.squeeze(0)
-
-
-def compare_classification(
-        output_tsr: torch.tensor, golden_tsr: torch.tensor, top_k: int, logger=None
-) -> dict:
-    errors = {}
-    output_tsr, golden_tsr = output_tsr.to("cpu"), golden_tsr.to("cpu")
-
-    # tensor comparison
-    if not equal(output_tsr, golden_tsr, threshold=1e-4):
-        for i, (output, golden) in enumerate(zip(output_tsr, golden_tsr)):
-            if not equal(output, golden):
-                errors[i] = (1, 0)
-
-    # top k comparison to check if classification has changed
-    output_topk = get_top_k_labels(output_tsr, top_k)
-    golden_topk = get_top_k_labels(golden_tsr, top_k)
-    if equal(output_topk, golden_topk) is False:
-        for i, (tpk_found, tpk_gold) in enumerate(zip(output_topk, golden_topk)):
-            if tpk_found != tpk_gold:
-                if i in errors:
-                    output, _ = errors[i]
-                    errors[i] = (output, 1)
-                else:
-                    errors[i] = (0, 1)
-
-    return errors
 
 
 def main():
@@ -123,9 +68,8 @@ def main():
         level=logging.ERROR,
     )
 
-    logger = logging.getLogger()
+    # logger = logging.getLogger()
 
-    ### --
     # model initialization, Vision Transformer
     model_name = args.model
     if not model_name in configs.MODELS:
@@ -181,21 +125,26 @@ def main():
         # putting image on GPU
         images = images.to("cuda")
         # Warm up
+        print(f"Warming up with {WARM_UP_ITERATIONS} iterations")
+        tic = time.time()
         for _ in range(WARM_UP_ITERATIONS):
             _ = model(images)
-        torch.cuda.synchronize(device=torch.device("cuda"))
+            torch.cuda.synchronize(device=torch.device("cuda"))
+        print(f"Warm up finished in {time.time() - tic}s")
 
+        torch.cuda.cudart().cudaProfilerStart()
         start_time = time.time()
         for iteration in range(args.iterations):
             # getting the prediction
             output = model(images)
             torch.cuda.synchronize(device=torch.device("cuda"))
         end_time = time.time()
+        torch.cuda.cudart().cudaProfilerStop()
 
         # moving output to CPU
         output_cpu = output.to("cpu")
     print(f"PERF_MEASURE::model:{args.model} hardening:{args.replace_id} "
-          f"iterations:{args.iterations} it_time:{(end_time - start_time) / args.iterations:.2f} "
+          f"iterations:{args.iterations} it_time:{(end_time - start_time) / args.iterations:.4f} "
           f"shape cpu:{output_cpu.shape}")
     # if args.replace_id:
     #     save_name = (
