@@ -57,11 +57,11 @@ class Profiler(abc.ABC):
         cmd, metrics_log_path = self._metrics_profiler_cmd()
         common.execute_cmd(cmd=cmd, logger=self._logger)
         self._logger.debug(f"Saved at {metrics_log_path}")
-        # Get the execution time
-        self._logger.debug(f"Profiling execution time (sections) app {self._app}")
-        cmd, time_log_path = self._time_profiler_cmd()
-        common.execute_cmd(cmd=cmd, logger=self._logger)
-        self._logger.debug(f"Saved at {time_log_path}")
+        # # Get the execution time
+        # self._logger.debug(f"Profiling execution time (sections) app {self._app}")
+        # cmd, time_log_path = self._time_profiler_cmd()
+        # common.execute_cmd(cmd=cmd, logger=self._logger)
+        # self._logger.debug(f"Saved at {time_log_path}")
         # Get the SHARED and RF
         self._logger.debug(f"Profiling memory app {self._app}")
         cmd, memory_log_path = self._memory_profiler_cmd()

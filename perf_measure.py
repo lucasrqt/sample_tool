@@ -13,6 +13,7 @@ from torchvision.datasets import ImageNet
 import configs
 import hardened_identity
 
+WARM_UP_ITERATIONS = 10
 
 def replace_identity(module, name, model_name):
     """Recursively put desired module in nn.module module."""
@@ -165,11 +166,11 @@ def main():
     data_loader = DataLoader(test_set, batch_size=configs.BATCH_SIZE, sampler=subset)
     data_iter = iter(data_loader)
 
-    imagenet_labels = dict(
-        enumerate(
-            open(f"/home/{os.getlogin()}/sample_tool/data/ilsvrc2012_wordnet_lemmas.txt")
-        )
-    )
+    # imagenet_labels = dict(
+    #     enumerate(
+    #         open(f"/home/{os.getlogin()}/sample_tool/data/ilsvrc2012_wordnet_lemmas.txt")
+    #     )
+    # )
 
     # inference w/ dataloader
     # for _i in range(configs.DEFAULT_INDEX):
@@ -179,6 +180,11 @@ def main():
     with torch.no_grad():
         # putting image on GPU
         images = images.to("cuda")
+        # Warm up
+        for _ in range(WARM_UP_ITERATIONS):
+            _ = model(images)
+        torch.cuda.synchronize(device=torch.device("cuda"))
+
         start_time = time.time()
         for iteration in range(args.iterations):
             # getting the prediction
@@ -189,35 +195,36 @@ def main():
         # moving output to CPU
         output_cpu = output.to("cpu")
     print(f"PERF_MEASURE::model:{args.model} hardening:{args.replace_id} "
-          f"iterations:{args.iterations} it_time:{(end_time - start_time) / args.iterations:.2f}")
-    if args.replace_id:
-        save_name = (
-            f"{configs.BASE_DIR}/{configs.GOLD_BASE}/goldsave_{model_name}-HD.pt"
-        )
-    else:
-        save_name = f"{configs.BASE_DIR}/{configs.GOLD_BASE}/goldsave_{model_name}.pt"
+          f"iterations:{args.iterations} it_time:{(end_time - start_time) / args.iterations:.2f} "
+          f"shape cpu:{output_cpu.shape}")
+    # if args.replace_id:
+    #     save_name = (
+    #         f"{configs.BASE_DIR}/{configs.GOLD_BASE}/goldsave_{model_name}-HD.pt"
+    #     )
+    # else:
+    #     save_name = f"{configs.BASE_DIR}/{configs.GOLD_BASE}/goldsave_{model_name}.pt"
 
-    if not args.loadsave:
-        pred = get_top_k_labels(output_cpu, top_k=configs.TOP_K_MAX)
-        print(labels == pred.squeeze())
-        for i in range(configs.BATCH_SIZE):
-            img_lbl = imagenet_labels[labels[i].item()].rstrip("\n")
-            pred_lbl = imagenet_labels[pred[i].item()].rstrip("\n")
-            print(f"expected: {img_lbl} -- pred: {pred_lbl}")
-
-        # if pred != labels.item():
-        #   print(f" [-] wrong classification value {pred}, expected {labels.item()}")
-
-        torch.save(output_cpu, save_name)
-    else:
-        prev_output = torch.load(save_name, map_location=torch.device("cpu"))
-        errors = compare_classification(output_cpu, prev_output, configs.TOP_K_MAX)
-        if errors != {}:
-            res = f""
-            for idx in errors:
-                otpt, clss = errors[idx]
-                res += f"{idx}: ouput errors: {otpt} -- classification: {clss}\n"
-            print(res)
+    # if not args.loadsave:
+    #     pred = get_top_k_labels(output_cpu, top_k=configs.TOP_K_MAX)
+    #     print(labels == pred.squeeze())
+    #     for i in range(configs.BATCH_SIZE):
+    #         img_lbl = imagenet_labels[labels[i].item()].rstrip("\n")
+    #         pred_lbl = imagenet_labels[pred[i].item()].rstrip("\n")
+    #         print(f"expected: {img_lbl} -- pred: {pred_lbl}")
+    #
+    #     # if pred != labels.item():
+    #     #   print(f" [-] wrong classification value {pred}, expected {labels.item()}")
+    #
+    #     torch.save(output_cpu, save_name)
+    # else:
+    #     prev_output = torch.load(save_name, map_location=torch.device("cpu"))
+    #     errors = compare_classification(output_cpu, prev_output, configs.TOP_K_MAX)
+    #     if errors != {}:
+    #         res = f""
+    #         for idx in errors:
+    #             otpt, clss = errors[idx]
+    #             res += f"{idx}: ouput errors: {otpt} -- classification: {clss}\n"
+    #         print(res)
 
 
 if __name__ == "__main__":

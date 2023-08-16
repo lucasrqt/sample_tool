@@ -9,7 +9,6 @@ import common
 import profiler_class
 
 DEFAULT_LOG = str(os.path.basename(__file__)).upper().replace(".PY", "")
-SCRIPT_PATH = os.path.dirname(os.path.abspath(__file__))
 
 
 def clean_last_profile(app_binary, logger):
@@ -32,12 +31,10 @@ def profile_all():
     # Check which GPU I'm executing
     gpu_name = os.popen("nvidia-smi --query-gpu=gpu_name --format=csv,noheader").read().strip()
     # The files will be saved on this repository
-    log_folder = f"{SCRIPT_PATH}/../data/performance_metrics"
-    if not os.path.isdir(log_folder):
-        os.mkdir(log_folder)
+    if not os.path.isdir(common.PROFILE_DATA_PATH):
+        os.mkdir(common.PROFILE_DATA_PATH)
     logger.debug(f"GPU:{gpu_name}")
 
-    app_dir = f"{SCRIPT_PATH}/.."
     tic = time.time()
     # Loop through each benchmark
     try:
@@ -51,10 +48,12 @@ def profile_all():
                 new_model_name = f"{model_name}_{hardening}"
                 logger.debug(f"Profiling for the {new_model_name}")
                 profiler = profiler_class.ProfilerNsight if gpu_name in common.NSIGHT_GPUS else profiler_class.ProfilerNvprof
-                profiler_obj = profiler(execute_parameters=exec_parameters, app_dir=app_dir, app=common.APP_NAME,
-                                        metrics=common.METRICS_NSIGHT_CLI, events=common.EVENTS_NSIGHT_CLI,
-                                        cuda_version=common.CUDA_VERSION,
-                                        log_base_path=log_folder, model=new_model_name, board=gpu_name, logger=logger)
+                profiler_obj = profiler(
+                    execute_parameters=exec_parameters, app_dir=common.REPOSITORY_HOME, app=common.APP_NAME,
+                    metrics=common.METRICS_NSIGHT_CLI, events=common.EVENTS_NSIGHT_CLI,
+                    cuda_version=common.CUDA_VERSION, log_base_path=common.PROFILE_DATA_PATH, model=new_model_name,
+                    board=gpu_name, logger=logger
+                )
                 profiler_obj.profile()
                 clean_last_profile(app_binary=app_binary, logger=logger)
     except KeyboardInterrupt:
