@@ -18,7 +18,7 @@ NVIDIA_SMI_LOG_PATH = f"{PROFILE_DATA_PATH}/nvidia_smi_data.csv"
 assert os.path.isdir(REPOSITORY_HOME), f"Incorrect home repository:{REPOSITORY_HOME}"
 
 # GPU name : SMS
-PASCAL = {"Quadro P2000": 60}
+PASCAL = {"Quadro P2000": 60, "Quadro P2200": 60}
 VOLTA = {"NVIDIA TITAN V": 70}
 AMPERE = {"NVIDIA GeForce RTX 3060 Ti": 86}
 ALL_GPUS = {**PASCAL, **VOLTA, **AMPERE}

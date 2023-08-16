@@ -3,7 +3,11 @@ set -e
 set -x
 
 log_interval=5
-log_path=../data/performance_metrics/nvidia_smi_data.csv
+NVIDIA_SMI_LOG_DIR=../data/performance_metrics
+
+mkdir -p ../log
+mkdir -p ${NVIDIA_SMI_LOG_DIR}
+log_path=${NVIDIA_SMI_LOG_DIR}/nvidia_smi_data.csv
 
 QUERIES=power.draw,clocks.sm,clocks.mem,clocks.gr,temperature.gpu
 # Release the running of nvidia-smi
