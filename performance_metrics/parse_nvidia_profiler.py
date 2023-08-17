@@ -1,15 +1,48 @@
 #!/usr/bin/python3
-import logging
 import os
 import re
-import sys
 
 import pandas as pd
 
 import common
+import configs
 import profiler_class
 
 DEFAULT_LOG = str(os.path.basename(__file__)).upper().replace(".PY", "")
+
+ORIGINAL, SWINV2, EVA, MAXVIT = "Original", "SwinV2", "EVA", "MaxViT"
+FAMILY = dict(
+    **{k: ORIGINAL for k in
+       [configs.VIT_BASE_PATCH16_224, configs.VIT_BASE_PATCH16_384, configs.VIT_BASE_PATCH32_224_SAM,
+        configs.VIT_LARGE_PATCH14_CLIP_224, configs.VIT_HUGE_PATCH14_CLIP_224]},
+    **{k: SWINV2 for k in
+       [configs.SWINV2_BASE_WINDOW12TO16_192to256_22KFT1K, configs.SWINV2_BASE_WINDOW12TO24_192to384_22KFT1K,
+        configs.SWINV2_LARGE_WINDOW12TO16_192to256_22KFT1K, configs.SWINV2_LARGE_WINDOW12TO24_192to384_22KFT1K]},
+    **{k: EVA for k in
+       [configs.EVA_BASE_PATCH14_448_MIM, configs.EVA_LARGE_PATCH14_448_MIM, configs.EVA_SMALL_PATCH14_448_MIN]},
+    **{k: MAXVIT for k in [configs.MAXVIT_LARGE_TF_384, configs.MAXVIT_LARGE_TF_512]},
+)
+
+
+def get_pretty_name(model_name, family):
+    model_name = model_name.upper()
+    if family == ORIGINAL:
+        m = re.match(r"VIT_(\S+)_PATCH(\d+)[_\S+]*_(\d+)", model_name)
+        if "SAM" in model_name:
+            return f"{m.group(1)[0]}S{m.group(2)}-{m.group(3)}"
+        return f"{m.group(1)[0]}{m.group(2)}-{m.group(3)}"
+    elif family == SWINV2:
+        m = re.match(r"SWINV2_(\S+)_WINDOW\d+TO\d+_192TO(\d+)", model_name)
+        return f"{m.group(1)[0]}-{m.group(2)}"
+    elif family == EVA:
+        m = re.match(r"EVA02_(\S+)_PATCH(\d+)_(\d+)", model_name)
+        if m is None: print(model_name)
+        return f"{m.group(1)[0]}{m.group(2)}-{m.group(3)}"
+    elif family == MAXVIT:
+        m = re.match(r"MAXVIT_(\S+)_TF_(\d+).IN21K_FT_IN1K", model_name)
+        return f"{m.group(1)[0]}-{m.group(2)}"
+    else:
+        raise ValueError(f"Not a valid model:{model_name}")
 
 
 def read_csv(csv_path):
@@ -101,32 +134,33 @@ def parse_nsight_metrics(csv_path):
     # df["weights"] = df["Kernel Name"].apply(lambda x: kernel_time_weights.loc[x]).astype(float)
     # df = df[df["Metric Name"].isin(filter_metrics)]
 
+    # It's possible to sum quantitative metrics
     for nvprof_metric, nsight_set in common.QUANTITATIVE_METRICS_NSIGHT_CLI.items():
-        # sum_of_metrics = 0
-        # if nsight_set:
-        # # UNCOMMENT TO CHECK ANY PROBLEM
-        # tmp = df_metrics[df_metrics["Metric Name"].isin(nsight_set)]
-        # if (tmp["Metric Unit"] != "inst").any() and (tmp["Metric Value"] != 0).any():
-        #     print(tmp)
-        # sum_of_metrics = df[df["Metric Name"].isin(nsight_set)].sum()["Metric Value"]
-        line_dict[nvprof_metric] = df[df["Metric Name"].isin(nsight_set)].sum()["Metric Value"] if nsight_set else 0
+        line_dict[nvprof_metric] = df[df["Metric Name"].isin(nsight_set)].sum()["Metric Value"]
 
-    # Occupancy and ipc
-    occupancy_df = df[
-        df["Metric Name"].isin(common.PERFORMANCE_METRICS_NSIGHT_CLI["achieved_occupancy"])].copy()
-    ipc_df = df[df["Metric Name"].isin(common.PERFORMANCE_METRICS_NSIGHT_CLI["ipc"])]
-
-    # Divide by 100 if it is a percentage. Same as nvprof
-    occupancy_df["Metric Value"] = occupancy_df.apply(
-        lambda r: (float(r["Metric Value"]) / 100 if r["Metric Unit"] == "%" else float(r["Metric Value"])),
-        axis="columns")
+    # For performance get the highest
+    for nvprof_metric, nsight_set in common.PERFORMANCE_METRICS_NSIGHT_CLI.items():
+        metric_df = df[df["Metric Name"].isin(nsight_set)]
+        # Divide by 100 if it is a percentage. Same as nvprof
+        metric_value = metric_df.apply(
+            lambda r: (float(r["Metric Value"]) / 100.0 if r["Metric Unit"] == "%" else float(r["Metric Value"])),
+            axis="columns")
+        line_dict[nvprof_metric] = metric_value.max()
+    # Occupancy and ipc, it's necessary to calculate it separately
+    # occupancy_df = df[df["Metric Name"].isin(common.PERFORMANCE_METRICS_NSIGHT_CLI["achieved_occupancy"])].copy()
+    # ipc_df = df[df["Metric Name"].isin(common.PERFORMANCE_METRICS_NSIGHT_CLI["ipc"])]
+    #
+    # # Divide by 100 if it is a percentage. Same as nvprof
+    # occupancy_df["Metric Value"] = occupancy_df.apply(
+    #     lambda r: (float(r["Metric Value"]) / 100 if r["Metric Unit"] == "%" else float(r["Metric Value"])),
+    #     axis="columns")
 
     # occupancy_df["wt_mean"] = occupancy_df["weights"] * occupancy_df["Metric Value"]
     # Mean
     # line_dict["achieved_occupancy"] = occupancy_df["wt_mean"].mean()
     # line_dict["ipc"] = ipc_df["wt_mean"].mean()
-    line_dict["achieved_occupancy"] = occupancy_df["Metric Value"].max()
-    line_dict["ipc"] = ipc_df["Metric Value"].max()
+    # line_dict["achieved_occupancy"] = occupancy_df["Metric Value"].max()
+    # line_dict["ipc"] = ipc_df["Metric Value"].max()
 
     return line_dict
 
@@ -136,14 +170,10 @@ def parse_nvprof_metrics(csv_path):
     metric_dict = df[df["Metric Name"].isin(common.QUANTITATIVE_METRICS_NSIGHT_CLI.keys())]
     metric_dict = metric_dict[["Metric Name", "Avg"]].groupby("Metric Name").sum().sum(axis=1)
     line_dict = metric_dict.to_dict()
-    # df["weights"] = df["Kernel"].apply(lambda x: kernel_time_weights.loc[x]).astype(float)
-    df = df[df["Metric Name"].isin(["ipc", "achieved_occupancy"])].copy()
-    # df["wt_mean"] = df["weights"] * df["Max"].astype(float)
-
-    for key in ["ipc", "achieved_occupancy"]:
-        occ_and_ipc = df[df["Metric Name"] == key]
+    for key in common.PERFORMANCE_METRICS_NSIGHT_CLI:
+        # metric_df = df[df["Metric Name"] == key]
         # line_dict[key] = occ_and_ipc["wt_mean"].mean()
-        line_dict[key] = occ_and_ipc["Max"].max()
+        line_dict[key] = df[df["Metric Name"] == key]["Max"].max()
 
     return line_dict
 
@@ -162,9 +192,9 @@ def parse_nsight_memory(csv_path):
         # RF must be evaluated by the lifecycle of the variables
         # memory_dict[name] = df_mem.loc[df["Metric Name"] == key, "Metric Value"].max()
         # memory_dict[name] = (df_mem["Metric Value"].astype(float) * df_mem["weights"]).mean()
-        memory_dict[f"{name}_mean"] = df_mem["Metric Value"].astype(float).mean()
+        # memory_dict[f"{name}_mean"] = df_mem["Metric Value"].astype(float).mean()
         memory_dict[f"{name}_max"] = df_mem["Metric Value"].astype(float).max()
-        memory_dict[f"{name}_min"] = df_mem["Metric Value"].astype(float).min()
+        # memory_dict[f"{name}_min"] = df_mem["Metric Value"].astype(float).min()
 
     return memory_dict
 
@@ -188,9 +218,9 @@ def parse_nvprof_memory(csv_path):
             raise ValueError(f"{metric_units}")
         # RF must be evaluated by the lifecycle of the variables
         # memory_dict[name] = ((dfi[key].astype(float) * converter) * dfi["weights"]).mean()
-        memory_dict[f"{name}_mean"] = (dfi[key].astype(float) * converter).mean()
+        # memory_dict[f"{name}_mean"] = (dfi[key].astype(float) * converter).mean()
         memory_dict[f"{name}_max"] = (dfi[key].astype(float) * converter).max()
-        memory_dict[f"{name}_min"] = (dfi[key].astype(float) * converter).min()
+        # memory_dict[f"{name}_min"] = (dfi[key].astype(float) * converter).min()
 
         # memory_dict[name] = dfi[key].astype(float).max() * converter
 
@@ -199,19 +229,27 @@ def parse_nvprof_memory(csv_path):
 
 def parse_nvprof_events(csv_path):
     df = read_csv(csv_path=csv_path)
-    metric_dict = df[df["Metric Name"].isin(common.EVENTS_NSIGHT_CLI.keys())]
-    metric_dict = metric_dict[["Metric Name", "Avg"]].groupby("Metric Name").sum().sum(axis=1)
-    line_dict = metric_dict.to_dict()
-    return line_dict
+    metric_dict = df[df["Event Name"].isin(common.EVENTS_NSIGHT_CLI.keys())]
+    metric_dict = metric_dict[["Event Name", "Avg"]].groupby("Event Name").sum().sum(axis=1)
+    return metric_dict.to_dict()
 
 
 def parse_nsight_events(csv_path):
     df = read_csv(csv_path=csv_path)
-    line_dict = dict()
-    for nvprof_metric, nsight_set in common.EVENTS_NSIGHT_CLI.items():
-        line_dict[nvprof_metric] = df[df["Metric Name"].isin(nsight_set)].sum()["Metric Value"] if nsight_set else 0
-
+    line_dict = {
+        nvprof_metric: df[df["Metric Name"].isin(nsight_set)].sum()["Metric Value"]
+        for nvprof_metric, nsight_set in common.EVENTS_NSIGHT_CLI.items()
+    }
     return line_dict
+
+
+def parse_naive_execution_time_profiling(csv_path):
+    with open(csv_path) as fp:
+        for line in fp:
+            m = re.match(r"PERF_MEASURE::model:\S+ hardening:\S+ iterations:\S+ it_time:(\S+) shape cpu:.*", line)
+            if m:
+                return float(m.group(1))
+    raise ValueError
 
 
 def main():
@@ -220,9 +258,9 @@ def main():
     list_final_metrics = list()
     # Select which boards to parse
     boards = {
-        # "pascal": "QuadroP2000",
-        "volta": "NVIDIATITANV",
-        # "ampere": "NVIDIAGeForceRTX3060Ti"
+        "pascal": "QuadroP2200",
+        # "volta": "NVIDIATITANV",
+        "ampere": "NVIDIAGeForceRTX3060Ti"
     }
     boards_obj = {
         "pascal": profiler_class.ProfilerNvprof,
@@ -250,6 +288,7 @@ def main():
                 new_model_name = f"{model_name}_{hardening}"
                 parse_metrics = parser_functions[board]["metric"]
                 # parse_time = parser_functions[board]["time"]
+                parse_events = parser_functions[board]["events"]
                 parse_memory = parser_functions[board]["memory"]
                 profiler_obj = boards_obj[board](
                     execute_parameters="", app_dir="", app=common.APP_NAME, metrics="", events="",
@@ -259,15 +298,22 @@ def main():
                 csv_time_path = profiler_obj.get_log_name(target="time")
                 # # Parse the time ---------------------------------------------------------------------------
                 # execution_time, kernel_time_weights = parse_time(csv_path=csv_time_path)
+                execution_time = parse_naive_execution_time_profiling(csv_path=csv_time_path)
                 # Parse the Metrics ------------------------------------------------------------------------
                 csv_metrics_path = profiler_obj.get_log_name(target="metrics")
                 metrics_dict = parse_metrics(csv_path=csv_metrics_path)
                 # Parse the memory -------------------------------------------------------------------------
                 csv_memory_path = profiler_obj.get_log_name(target="memory")
                 memory_dict = parse_memory(csv_path=csv_memory_path)
-                line_dict = {"board": board, "app": new_model_name, "nvcc_version": common.CUDA_VERSION,
-                             # "execution_time": execution_time,
-                             **metrics_dict, **memory_dict}
+                # Parse the events -------------------------------------------------------------------------
+                csv_events_path = profiler_obj.get_log_name(target="events")
+                events_dict = parse_events(csv_path=csv_events_path)
+                family = FAMILY[model_name]
+                line_dict = {
+                    "nvcc_version": common.CUDA_VERSION, "board": board, "app": model_name, "hardening": hardening,
+                    "family": family, "config": get_pretty_name(model_name=model_name, family=family),
+                    "execution_time": execution_time, **metrics_dict, **memory_dict, **events_dict
+                }
                 list_final_metrics.append(line_dict)
 
     final_df = pd.DataFrame(list_final_metrics)

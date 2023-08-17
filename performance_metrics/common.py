@@ -11,9 +11,10 @@ APP_NAME = "perf_measure.py"
 # Up to now it is 32 threads per warp
 THREADS_PER_WARP = 32
 
+# REPOSITORY_HOME = "/home/fernando/git_research/sample_tool"
 REPOSITORY_HOME = "/home/carol/sample_tool"
 PROFILE_DATA_PATH = f"{REPOSITORY_HOME}/data/performance_metrics"
-FINAL_PROFILE_DATABASE = f"{PROFILE_DATA_PATH}/final_profile_processed.csv"
+FINAL_PROFILE_DATABASE = f"{REPOSITORY_HOME}/data/final_profile_processed.csv"
 NVIDIA_SMI_LOG_PATH = f"{PROFILE_DATA_PATH}/nvidia_smi_data.csv"
 assert os.path.isdir(REPOSITORY_HOME), f"Incorrect home repository:{REPOSITORY_HOME}"
 
@@ -77,6 +78,11 @@ QUANTITATIVE_METRICS_NSIGHT_CLI = {
     # # It can be one of these two, following the other metrics pattern *executed_pipe_tensor_op*
     # # smsp__inst_executed_pipe_tensor.sum smsp__inst_executed_pipe_tensor_op_hmma.sum
     # "tensor_count": ["smsp__inst_executed_pipe_tensor_op_hmma.sum"]
+    # "inst_issued": ["smsp__inst_issued.sum"],
+    "inst_executed": ["smsp__inst_executed.sum"],
+    # "cf_issued": None,
+    "cf_executed": ["smsp__inst_executed_pipe_cbu.sum", "smsp__inst_executed_pipe_adu.sum"],
+    # "ldst_issued": None, "ldst_executed": None,
 }
 
 PERFORMANCE_METRICS_NSIGHT_CLI = {
@@ -125,12 +131,6 @@ PERFORMANCE_METRICS_NSIGHT_CLI = {
     # l2 texture does not work
     # "l2_texture_read_hit_rate": ["l2_tex_read_hit_rate"],
     # "nc_cache_global_hit_rate": None,
-    # # Quantitative metrics (less significant)
-    # "inst_issued": ["smsp__inst_issued.sum"],
-    "inst_executed": ["smsp__inst_executed.sum"],
-    # "cf_issued": None,
-    "cf_executed": ["smsp__inst_executed_pipe_cbu.sum", "smsp__inst_executed_pipe_adu.sum"],
-    # "ldst_issued": None, "ldst_executed": None,
 }
 
 # -- Stall

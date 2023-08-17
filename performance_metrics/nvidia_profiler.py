@@ -61,7 +61,7 @@ def profile_all():
                 naive_execution_time_profiling(time_log_path=profiler_obj.get_log_name("time"),
                                                execute_parameters=exec_parameters, logger=logger)
                 clean_last_profile(app_binary=app_binary, logger=logger)
-    except KeyboardInterrupt:
+    except (KeyboardInterrupt, ValueError):
         clean_last_profile(app_binary=common.APP_NAME, logger=logger)
 
     toc = time.time()
