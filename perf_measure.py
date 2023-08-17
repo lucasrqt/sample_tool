@@ -16,6 +16,7 @@ WARM_UP_ITERATIONS = 10
 
 
 def main():
+    torch.cuda.cudart().cudaProfilerStop()
     # parser part
     arg_parser = argparse.ArgumentParser(
         prog="perf_measure", add_help=True, formatter_class=argparse.RawTextHelpFormatter
