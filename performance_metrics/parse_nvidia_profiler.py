@@ -133,7 +133,7 @@ def parse_nsight_metrics(csv_path):
     # filter_metrics = [y for x in common.METRICS_NSIGHT_CLI.values() if x for y in x]
     # df["weights"] = df["Kernel Name"].apply(lambda x: kernel_time_weights.loc[x]).astype(float)
     # df = df[df["Metric Name"].isin(filter_metrics)]
-
+    df["Metric Value"] = df["Metric Value"].astype(float)
     # It's possible to sum quantitative metrics
     for nvprof_metric, nsight_set in common.QUANTITATIVE_METRICS_NSIGHT_CLI.items():
         line_dict[nvprof_metric] = df[df["Metric Name"].isin(nsight_set)].sum()["Metric Value"]
@@ -167,7 +167,8 @@ def parse_nsight_metrics(csv_path):
 
 def parse_nvprof_metrics(csv_path):
     df = read_csv(csv_path=csv_path)
-    metric_dict = df[df["Metric Name"].isin(common.QUANTITATIVE_METRICS_NSIGHT_CLI.keys())]
+    metric_dict = df[df["Metric Name"].isin(common.QUANTITATIVE_METRICS_NSIGHT_CLI.keys())].copy()
+    metric_dict["Avg"] = metric_dict["Avg"].astype(float) * metric_dict["Invocations"]
     metric_dict = metric_dict[["Metric Name", "Avg"]].groupby("Metric Name").sum().sum(axis=1)
     line_dict = metric_dict.to_dict()
     for key in common.PERFORMANCE_METRICS_NSIGHT_CLI:
@@ -229,13 +230,15 @@ def parse_nvprof_memory(csv_path):
 
 def parse_nvprof_events(csv_path):
     df = read_csv(csv_path=csv_path)
+    df["Total"] = df["Total"].astype(float)
     metric_dict = df[df["Event Name"].isin(common.EVENTS_NSIGHT_CLI.keys())]
-    metric_dict = metric_dict[["Event Name", "Avg"]].groupby("Event Name").sum().sum(axis=1)
+    metric_dict = metric_dict[["Event Name", "Total"]].groupby("Event Name").sum().sum(axis=1)
     return metric_dict.to_dict()
 
 
 def parse_nsight_events(csv_path):
     df = read_csv(csv_path=csv_path)
+    df["Metric Value"] = df["Metric Value"].astype(float)
     line_dict = {
         nvprof_metric: df[df["Metric Name"].isin(nsight_set)].sum()["Metric Value"]
         for nvprof_metric, nsight_set in common.EVENTS_NSIGHT_CLI.items()
