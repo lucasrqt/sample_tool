@@ -1,0 +1,337 @@
+board,model,bfm,group,SDC,critical_SDC,DUE,config,family,hardening
+Pascal,vit16_224,FLIP_SINGLE_BIT,gp,43,3,14,B16-224,Original ViT,Unhardened
+Pascal,vit16_224,RANDOM_VALUE,gp,120,25,20,B16-224,Original ViT,Unhardened
+Pascal,vit16_224,FLIP_SINGLE_BIT,ld,10,4,0,B16-224,Original ViT,Unhardened
+Pascal,vit16_224,RANDOM_VALUE,ld,100,36,0,B16-224,Original ViT,Unhardened
+Pascal,vit16_224,FLIP_SINGLE_BIT,fp32,40,2,0,B16-224,Original ViT,Unhardened
+Pascal,vit16_224,RANDOM_VALUE,fp32,112,38,0,B16-224,Original ViT,Unhardened
+Pascal,vit16_224,WARP_RANDOM_VALUE,fp32,191,22,0,B16-224,Original ViT,Unhardened
+Ampere,vit16_224,FLIP_SINGLE_BIT,gp,26,1,6,B16-224,Original ViT,Unhardened
+Ampere,vit16_224,RANDOM_VALUE,gp,100,27,14,B16-224,Original ViT,Unhardened
+Ampere,vit16_224,FLIP_SINGLE_BIT,ld,16,0,13,B16-224,Original ViT,Unhardened
+Ampere,vit16_224,RANDOM_VALUE,ld,64,19,10,B16-224,Original ViT,Unhardened
+Ampere,vit16_224,FLIP_SINGLE_BIT,fp32,32,2,0,B16-224,Original ViT,Unhardened
+Ampere,vit16_224,RANDOM_VALUE,fp32,124,24,0,B16-224,Original ViT,Unhardened
+Ampere,vit16_224,WARP_RANDOM_VALUE,fp32,183,39,0,B16-224,Original ViT,Unhardened
+Pascal,vit16_384,FLIP_SINGLE_BIT,gp,33,4,11,B16-384,Original ViT,Unhardened
+Pascal,vit16_384,RANDOM_VALUE,gp,101,27,15,B16-384,Original ViT,Unhardened
+Pascal,vit16_384,FLIP_SINGLE_BIT,ld,10,3,0,B16-384,Original ViT,Unhardened
+Pascal,vit16_384,RANDOM_VALUE,ld,81,38,0,B16-384,Original ViT,Unhardened
+Pascal,vit16_384,FLIP_SINGLE_BIT,fp32,29,2,0,B16-384,Original ViT,Unhardened
+Pascal,vit16_384,RANDOM_VALUE,fp32,111,27,0,B16-384,Original ViT,Unhardened
+Pascal,vit16_384,WARP_RANDOM_VALUE,fp32,169,58,0,B16-384,Original ViT,Unhardened
+Ampere,vit16_384,FLIP_SINGLE_BIT,gp,24,6,7,B16-384,Original ViT,Unhardened
+Ampere,vit16_384,RANDOM_VALUE,gp,92,17,20,B16-384,Original ViT,Unhardened
+Ampere,vit16_384,FLIP_SINGLE_BIT,ld,9,0,7,B16-384,Original ViT,Unhardened
+Ampere,vit16_384,RANDOM_VALUE,ld,68,27,11,B16-384,Original ViT,Unhardened
+Ampere,vit16_384,FLIP_SINGLE_BIT,fp32,24,4,0,B16-384,Original ViT,Unhardened
+Ampere,vit16_384,RANDOM_VALUE,fp32,111,29,0,B16-384,Original ViT,Unhardened
+Ampere,vit16_384,WARP_RANDOM_VALUE,fp32,158,50,0,B16-384,Original ViT,Unhardened
+Pascal,vit32s_224,FLIP_SINGLE_BIT,gp,51,2,14,BS32-224,Original ViT,Unhardened
+Pascal,vit32s_224,RANDOM_VALUE,gp,121,25,15,BS32-224,Original ViT,Unhardened
+Pascal,vit32s_224,FLIP_SINGLE_BIT,ld,25,4,0,BS32-224,Original ViT,Unhardened
+Pascal,vit32s_224,RANDOM_VALUE,ld,82,34,1,BS32-224,Original ViT,Unhardened
+Pascal,vit32s_224,FLIP_SINGLE_BIT,fp32,26,2,0,BS32-224,Original ViT,Unhardened
+Pascal,vit32s_224,RANDOM_VALUE,fp32,133,27,0,BS32-224,Original ViT,Unhardened
+Pascal,vit32s_224,WARP_RANDOM_VALUE,fp32,187,42,0,BS32-224,Original ViT,Unhardened
+Ampere,vit32_sam_224,FLIP_SINGLE_BIT,gp,27,3,9,BS32-224,Original ViT,Unhardened
+Ampere,vit32_sam_224,RANDOM_VALUE,gp,119,10,13,BS32-224,Original ViT,Unhardened
+Ampere,vit32_sam_224,FLIP_SINGLE_BIT,ld,12,1,7,BS32-224,Original ViT,Unhardened
+Ampere,vit32_sam_224,RANDOM_VALUE,ld,50,17,7,BS32-224,Original ViT,Unhardened
+Ampere,vit32_sam_224,FLIP_SINGLE_BIT,fp32,29,4,0,BS32-224,Original ViT,Unhardened
+Ampere,vit32_sam_224,RANDOM_VALUE,fp32,125,30,0,BS32-224,Original ViT,Unhardened
+Ampere,vit32_sam_224,WARP_RANDOM_VALUE,fp32,185,34,0,BS32-224,Original ViT,Unhardened
+Pascal,vit14l_224,FLIP_SINGLE_BIT,gp,20,2,7,L14-224,Original ViT,Unhardened
+Pascal,vit14l_224,RANDOM_VALUE,gp,108,21,15,L14-224,Original ViT,Unhardened
+Pascal,vit14l_224,FLIP_SINGLE_BIT,ld,8,2,0,L14-224,Original ViT,Unhardened
+Pascal,vit14l_224,RANDOM_VALUE,ld,80,29,0,L14-224,Original ViT,Unhardened
+Pascal,vit14l_224,FLIP_SINGLE_BIT,fp32,15,2,0,L14-224,Original ViT,Unhardened
+Pascal,vit14l_224,RANDOM_VALUE,fp32,106,18,0,L14-224,Original ViT,Unhardened
+Pascal,vit14l_224,WARP_RANDOM_VALUE,fp32,174,33,0,L14-224,Original ViT,Unhardened
+Ampere,vit14l_224,FLIP_SINGLE_BIT,gp,15,2,6,L14-224,Original ViT,Unhardened
+Ampere,vit14l_224,RANDOM_VALUE,gp,72,24,6,L14-224,Original ViT,Unhardened
+Ampere,vit14l_224,FLIP_SINGLE_BIT,ld,15,1,7,L14-224,Original ViT,Unhardened
+Ampere,vit14l_224,RANDOM_VALUE,ld,72,11,5,L14-224,Original ViT,Unhardened
+Ampere,vit14l_224,FLIP_SINGLE_BIT,fp32,13,1,0,L14-224,Original ViT,Unhardened
+Ampere,vit14l_224,RANDOM_VALUE,fp32,86,25,0,L14-224,Original ViT,Unhardened
+Ampere,vit14l_224,WARP_RANDOM_VALUE,fp32,155,37,1,L14-224,Original ViT,Unhardened
+Pascal,vit14h,FLIP_SINGLE_BIT,gp,24,1,10,H14-224,Original ViT,Unhardened
+Pascal,vit14h,RANDOM_VALUE,gp,84,19,12,H14-224,Original ViT,Unhardened
+Pascal,vit14h,FLIP_SINGLE_BIT,ld,12,1,0,H14-224,Original ViT,Unhardened
+Pascal,vit14h,RANDOM_VALUE,ld,85,27,0,H14-224,Original ViT,Unhardened
+Pascal,vit14h,FLIP_SINGLE_BIT,fp32,20,3,0,H14-224,Original ViT,Unhardened
+Pascal,vit14h,RANDOM_VALUE,fp32,92,24,0,H14-224,Original ViT,Unhardened
+Pascal,vit14h,WARP_RANDOM_VALUE,fp32,165,35,0,H14-224,Original ViT,Unhardened
+Ampere,vit14h,FLIP_SINGLE_BIT,gp,20,3,10,H14-224,Original ViT,Unhardened
+Ampere,vit14h,RANDOM_VALUE,gp,87,22,14,H14-224,Original ViT,Unhardened
+Ampere,vit14h,FLIP_SINGLE_BIT,ld,5,3,7,H14-224,Original ViT,Unhardened
+Ampere,vit14h,RANDOM_VALUE,ld,71,15,6,H14-224,Original ViT,Unhardened
+Ampere,vit14h,FLIP_SINGLE_BIT,fp32,12,6,0,H14-224,Original ViT,Unhardened
+Ampere,vit14h,RANDOM_VALUE,fp32,84,24,0,H14-224,Original ViT,Unhardened
+Ampere,vit14h,WARP_RANDOM_VALUE,fp32,157,33,0,H14-224,Original ViT,Unhardened
+Pascal,vit16_224-hd,FLIP_SINGLE_BIT,gp,49,1,15,B16-224,Original ViT,Hardened
+Pascal,vit16_224-hd,RANDOM_VALUE,gp,109,10,26,B16-224,Original ViT,Hardened
+Pascal,vit16_224-hd,FLIP_SINGLE_BIT,ld,19,1,0,B16-224,Original ViT,Hardened
+Pascal,vit16_224-hd,RANDOM_VALUE,ld,112,16,0,B16-224,Original ViT,Hardened
+Pascal,vit16_224-hd,FLIP_SINGLE_BIT,fp32,31,0,0,B16-224,Original ViT,Hardened
+Pascal,vit16_224-hd,RANDOM_VALUE,fp32,128,13,0,B16-224,Original ViT,Hardened
+Pascal,vit16_224-hd,WARP_RANDOM_VALUE,fp32,197,16,4,B16-224,Original ViT,Hardened
+Ampere,vit16_224-hd,FLIP_SINGLE_BIT,gp,33,0,10,B16-224,Original ViT,Hardened
+Ampere,vit16_224-hd,RANDOM_VALUE,gp,125,12,16,B16-224,Original ViT,Hardened
+Ampere,vit16_224-hd,FLIP_SINGLE_BIT,ld,13,4,3,B16-224,Original ViT,Hardened
+Ampere,vit16_224-hd,RANDOM_VALUE,ld,93,8,6,B16-224,Original ViT,Hardened
+Ampere,vit16_224-hd,FLIP_SINGLE_BIT,fp32,31,1,0,B16-224,Original ViT,Hardened
+Ampere,vit16_224-hd,RANDOM_VALUE,fp32,130,20,0,B16-224,Original ViT,Hardened
+Ampere,vit16_224-hd,WARP_RANDOM_VALUE,fp32,207,11,0,B16-224,Original ViT,Hardened
+Pascal,vit16_384-hd,FLIP_SINGLE_BIT,gp,30,0,18,B16-384,Original ViT,Hardened
+Pascal,vit16_384-hd,RANDOM_VALUE,gp,116,7,17,B16-384,Original ViT,Hardened
+Pascal,vit16_384-hd,FLIP_SINGLE_BIT,ld,11,0,0,B16-384,Original ViT,Hardened
+Pascal,vit16_384-hd,RANDOM_VALUE,ld,103,25,0,B16-384,Original ViT,Hardened
+Pascal,vit16_384-hd,FLIP_SINGLE_BIT,fp32,32,1,0,B16-384,Original ViT,Hardened
+Pascal,vit16_384-hd,RANDOM_VALUE,fp32,126,9,0,B16-384,Original ViT,Hardened
+Pascal,vit16_384-hd,WARP_RANDOM_VALUE,fp32,209,20,0,B16-384,Original ViT,Hardened
+Ampere,vit16_384-hd,FLIP_SINGLE_BIT,gp,33,0,7,B16-384,Original ViT,Hardened
+Ampere,vit16_384-hd,RANDOM_VALUE,gp,90,11,12,B16-384,Original ViT,Hardened
+Ampere,vit16_384-hd,FLIP_SINGLE_BIT,ld,11,0,5,B16-384,Original ViT,Hardened
+Ampere,vit16_384-hd,RANDOM_VALUE,ld,80,11,11,B16-384,Original ViT,Hardened
+Ampere,vit16_384-hd,FLIP_SINGLE_BIT,fp32,21,2,0,B16-384,Original ViT,Hardened
+Ampere,vit16_384-hd,RANDOM_VALUE,fp32,123,12,0,B16-384,Original ViT,Hardened
+Ampere,vit16_384-hd,WARP_RANDOM_VALUE,fp32,194,25,0,B16-384,Original ViT,Hardened
+Pascal,vit32s_224-hd,FLIP_SINGLE_BIT,gp,50,1,13,BS32-224,Original ViT,Hardened
+Pascal,vit32s_224-hd,RANDOM_VALUE,gp,131,15,25,BS32-224,Original ViT,Hardened
+Pascal,vit32s_224-hd,FLIP_SINGLE_BIT,ld,21,1,0,BS32-224,Original ViT,Hardened
+Pascal,vit32s_224-hd,RANDOM_VALUE,ld,125,16,2,BS32-224,Original ViT,Hardened
+Pascal,vit32s_224-hd,FLIP_SINGLE_BIT,fp32,47,0,0,BS32-224,Original ViT,Hardened
+Pascal,vit32s_224-hd,RANDOM_VALUE,fp32,153,10,0,BS32-224,Original ViT,Hardened
+Pascal,vit32s_224-hd,WARP_RANDOM_VALUE,fp32,211,19,0,BS32-224,Original ViT,Hardened
+Ampere,vit32s_224-hd,FLIP_SINGLE_BIT,gp,31,0,13,BS32-224,Original ViT,Hardened
+Ampere,vit32s_224-hd,RANDOM_VALUE,gp,120,9,12,BS32-224,Original ViT,Hardened
+Ampere,vit32s_224-hd,FLIP_SINGLE_BIT,ld,18,0,2,BS32-224,Original ViT,Hardened
+Ampere,vit32s_224-hd,RANDOM_VALUE,ld,67,6,11,BS32-224,Original ViT,Hardened
+Ampere,vit32s_224-hd,FLIP_SINGLE_BIT,fp32,44,1,0,BS32-224,Original ViT,Hardened
+Ampere,vit32s_224-hd,RANDOM_VALUE,fp32,151,6,0,BS32-224,Original ViT,Hardened
+Ampere,vit32s_224-hd,WARP_RANDOM_VALUE,fp32,195,30,0,BS32-224,Original ViT,Hardened
+Pascal,vit14l_224-hd,FLIP_SINGLE_BIT,gp,31,1,5,L14-224,Original ViT,Hardened
+Pascal,vit14l_224-hd,RANDOM_VALUE,gp,124,4,16,L14-224,Original ViT,Hardened
+Pascal,vit14l_224-hd,FLIP_SINGLE_BIT,ld,12,1,0,L14-224,Original ViT,Hardened
+Pascal,vit14l_224-hd,RANDOM_VALUE,ld,94,12,0,L14-224,Original ViT,Hardened
+Pascal,vit14l_224-hd,FLIP_SINGLE_BIT,fp32,19,1,5,L14-224,Original ViT,Hardened
+Pascal,vit14l_224-hd,RANDOM_VALUE,fp32,115,9,0,L14-224,Original ViT,Hardened
+Pascal,vit14l_224-hd,WARP_RANDOM_VALUE,fp32,189,11,0,L14-224,Original ViT,Hardened
+Ampere,vit14l_224-hd,FLIP_SINGLE_BIT,gp,13,0,8,L14-224,Original ViT,Hardened
+Ampere,vit14l_224-hd,RANDOM_VALUE,gp,104,6,13,L14-224,Original ViT,Hardened
+Ampere,vit14l_224-hd,FLIP_SINGLE_BIT,ld,11,0,2,L14-224,Original ViT,Hardened
+Ampere,vit14l_224-hd,RANDOM_VALUE,ld,95,6,6,L14-224,Original ViT,Hardened
+Ampere,vit14l_224-hd,FLIP_SINGLE_BIT,fp32,14,0,2,L14-224,Original ViT,Hardened
+Ampere,vit14l_224-hd,RANDOM_VALUE,fp32,112,10,0,L14-224,Original ViT,Hardened
+Ampere,vit14l_224-hd,WARP_RANDOM_VALUE,fp32,201,9,0,L14-224,Original ViT,Hardened
+Pascal,vit14h-hd,FLIP_SINGLE_BIT,gp,19,0,2,H14-224,Original ViT,Hardened
+Pascal,vit14h-hd,RANDOM_VALUE,gp,113,5,11,H14-224,Original ViT,Hardened
+Pascal,vit14h-hd,FLIP_SINGLE_BIT,ld,17,0,0,H14-224,Original ViT,Hardened
+Pascal,vit14h-hd,RANDOM_VALUE,ld,102,11,0,H14-224,Original ViT,Hardened
+Pascal,vit14h-hd,FLIP_SINGLE_BIT,fp32,16,0,0,H14-224,Original ViT,Hardened
+Pascal,vit14h-hd,RANDOM_VALUE,fp32,112,5,0,H14-224,Original ViT,Hardened
+Pascal,vit14h-hd,WARP_RANDOM_VALUE,fp32,202,9,0,H14-224,Original ViT,Hardened
+Ampere,vit14h-hd,FLIP_SINGLE_BIT,gp,28,0,11,H14-224,Original ViT,Hardened
+Ampere,vit14h-hd,RANDOM_VALUE,gp,97,4,11,H14-224,Original ViT,Hardened
+Ampere,vit14h-hd,FLIP_SINGLE_BIT,ld,6,0,5,H14-224,Original ViT,Hardened
+Ampere,vit14h-hd,RANDOM_VALUE,ld,75,7,5,H14-224,Original ViT,Hardened
+Ampere,vit14h-hd,FLIP_SINGLE_BIT,fp32,14,0,0,H14-224,Original ViT,Hardened
+Ampere,vit14h-hd,RANDOM_VALUE,fp32,116,9,0,H14-224,Original ViT,Hardened
+Ampere,vit14h-hd,WARP_RANDOM_VALUE,fp32,190,9,0,H14-224,Original ViT,Hardened
+Pascal,eva_base,FLIP_SINGLE_BIT,gp,14,5,14,B14-448,EVA,Unhardened
+Pascal,eva_base,RANDOM_VALUE,gp,39,53,34,B14-448,EVA,Unhardened
+Pascal,eva_base,FLIP_SINGLE_BIT,ld,9,8,0,B14-448,EVA,Unhardened
+Pascal,eva_base,RANDOM_VALUE,ld,61,64,0,B14-448,EVA,Unhardened
+Pascal,eva_base,FLIP_SINGLE_BIT,fp32,11,4,0,B14-448,EVA,Unhardened
+Pascal,eva_base,RANDOM_VALUE,fp32,64,59,0,B14-448,EVA,Unhardened
+Pascal,eva_base,WARP_RANDOM_VALUE,fp32,123,82,0,B14-448,EVA,Unhardened
+Ampere,eva_base,FLIP_SINGLE_BIT,gp,13,3,11,B14-448,EVA,Unhardened
+Ampere,eva_base,RANDOM_VALUE,gp,58,43,9,B14-448,EVA,Unhardened
+Ampere,eva_base,FLIP_SINGLE_BIT,ld,5,1,2,B14-448,EVA,Unhardened
+Ampere,eva_base,RANDOM_VALUE,ld,59,42,12,B14-448,EVA,Unhardened
+Ampere,eva_base,FLIP_SINGLE_BIT,fp32,14,5,0,B14-448,EVA,Unhardened
+Ampere,eva_base,RANDOM_VALUE,fp32,68,53,0,B14-448,EVA,Unhardened
+Ampere,eva_base,WARP_RANDOM_VALUE,fp32,125,79,1,B14-448,EVA,Unhardened
+Pascal,eva_large,FLIP_SINGLE_BIT,gp,13,7,8,L14_448,EVA,Unhardened
+Pascal,eva_large,RANDOM_VALUE,gp,48,55,27,L14_448,EVA,Unhardened
+Pascal,eva_large,FLIP_SINGLE_BIT,ld,4,4,0,L14_448,EVA,Unhardened
+Pascal,eva_large,RANDOM_VALUE,ld,52,49,0,L14_448,EVA,Unhardened
+Pascal,eva_large,FLIP_SINGLE_BIT,fp32,7,1,0,L14_448,EVA,Unhardened
+Pascal,eva_large,RANDOM_VALUE,fp32,58,67,0,L14_448,EVA,Unhardened
+Pascal,eva_large,WARP_RANDOM_VALUE,fp32,116,83,0,L14_448,EVA,Unhardened
+Ampere,eva_large,FLIP_SINGLE_BIT,gp,3,5,12,L14_448,EVA,Unhardened
+Ampere,eva_large,RANDOM_VALUE,gp,48,45,26,L14_448,EVA,Unhardened
+Ampere,eva_large,FLIP_SINGLE_BIT,ld,1,4,11,L14_448,EVA,Unhardened
+Ampere,eva_large,RANDOM_VALUE,ld,51,46,8,L14_448,EVA,Unhardened
+Ampere,eva_large,FLIP_SINGLE_BIT,fp32,5,2,0,L14_448,EVA,Unhardened
+Ampere,eva_large,RANDOM_VALUE,fp32,56,56,2,L14_448,EVA,Unhardened
+Ampere,eva_large,WARP_RANDOM_VALUE,fp32,110,80,0,L14_448,EVA,Unhardened
+Pascal,eva_base-hd,FLIP_SINGLE_BIT,gp,20,1,22,B14-448,EVA,Hardened
+Pascal,eva_base-hd,RANDOM_VALUE,gp,88,5,28,B14-448,EVA,Hardened
+Pascal,eva_base-hd,FLIP_SINGLE_BIT,ld,11,1,0,B14-448,EVA,Hardened
+Pascal,eva_base-hd,RANDOM_VALUE,ld,112,7,0,B14-448,EVA,Hardened
+Pascal,eva_base-hd,FLIP_SINGLE_BIT,fp32,11,1,0,B14-448,EVA,Hardened
+Pascal,eva_base-hd,RANDOM_VALUE,fp32,103,5,0,B14-448,EVA,Hardened
+Pascal,eva_base-hd,WARP_RANDOM_VALUE,fp32,201,13,0,B14-448,EVA,Hardened
+Ampere,eva_base-hd,FLIP_SINGLE_BIT,gp,13,1,6,B14-448,EVA,Hardened
+Ampere,eva_base-hd,RANDOM_VALUE,gp,101,5,17,B14-448,EVA,Hardened
+Ampere,eva_base-hd,FLIP_SINGLE_BIT,ld,11,0,6,B14-448,EVA,Hardened
+Ampere,eva_base-hd,RANDOM_VALUE,ld,84,6,10,B14-448,EVA,Hardened
+Ampere,eva_base-hd,FLIP_SINGLE_BIT,fp32,14,0,1,B14-448,EVA,Hardened
+Ampere,eva_base-hd,RANDOM_VALUE,fp32,128,2,0,B14-448,EVA,Hardened
+Ampere,eva_base-hd,WARP_RANDOM_VALUE,fp32,195,7,0,B14-448,EVA,Hardened
+Pascal,eva_large-hd,FLIP_SINGLE_BIT,gp,13,0,16,L14_448,EVA,Hardened
+Pascal,eva_large-hd,RANDOM_VALUE,gp,86,6,15,L14_448,EVA,Hardened
+Pascal,eva_large-hd,FLIP_SINGLE_BIT,ld,9,0,0,L14_448,EVA,Hardened
+Pascal,eva_large-hd,RANDOM_VALUE,ld,109,8,0,L14_448,EVA,Hardened
+Pascal,eva_large-hd,FLIP_SINGLE_BIT,fp32,12,0,0,L14_448,EVA,Hardened
+Pascal,eva_large-hd,RANDOM_VALUE,fp32,104,4,0,L14_448,EVA,Hardened
+Pascal,eva_large-hd,WARP_RANDOM_VALUE,fp32,190,7,0,L14_448,EVA,Hardened
+Ampere,eva_large-hd,FLIP_SINGLE_BIT,gp,13,0,9,L14_448,EVA,Hardened
+Ampere,eva_large-hd,RANDOM_VALUE,gp,85,8,13,L14_448,EVA,Hardened
+Ampere,eva_large-hd,FLIP_SINGLE_BIT,ld,13,1,8,L14_448,EVA,Hardened
+Ampere,eva_large-hd,RANDOM_VALUE,ld,88,6,12,L14_448,EVA,Hardened
+Ampere,eva_large-hd,FLIP_SINGLE_BIT,fp32,10,2,2,L14_448,EVA,Hardened
+Ampere,eva_large-hd,RANDOM_VALUE,fp32,94,12,0,L14_448,EVA,Hardened
+Ampere,eva_large-hd,WARP_RANDOM_VALUE,fp32,169,8,0,L14_448,EVA,Hardened
+Pascal,swin_b12to16,FLIP_SINGLE_BIT,gp,35,2,20,B256,Swin,Unhardened
+Pascal,swin_b12to16,RANDOM_VALUE,gp,79,8,60,B256,Swin,Unhardened
+Pascal,swin_b12to16,FLIP_SINGLE_BIT,ld,14,2,0,B256,Swin,Unhardened
+Pascal,swin_b12to16,RANDOM_VALUE,ld,114,7,4,B256,Swin,Unhardened
+Pascal,swin_b12to16,FLIP_SINGLE_BIT,fp32,37,0,0,B256,Swin,Unhardened
+Pascal,swin_b12to16,RANDOM_VALUE,fp32,132,6,0,B256,Swin,Unhardened
+Pascal,swin_b12to16,WARP_RANDOM_VALUE,fp32,188,19,0,B256,Swin,Unhardened
+Ampere,swin_b12to16,FLIP_SINGLE_BIT,gp,23,1,13,B256,Swin,Unhardened
+Ampere,swin_b12to16,RANDOM_VALUE,gp,85,9,24,B256,Swin,Unhardened
+Ampere,swin_b12to16,FLIP_SINGLE_BIT,ld,9,2,9,B256,Swin,Unhardened
+Ampere,swin_b12to16,RANDOM_VALUE,ld,72,6,7,B256,Swin,Unhardened
+Ampere,swin_b12to16,FLIP_SINGLE_BIT,fp32,22,2,0,B256,Swin,Unhardened
+Ampere,swin_b12to16,RANDOM_VALUE,fp32,122,11,0,B256,Swin,Unhardened
+Ampere,swin_b12to16,WARP_RANDOM_VALUE,fp32,183,17,0,B256,Swin,Unhardened
+Pascal,swin_b12to14,FLIP_SINGLE_BIT,gp,14,0,20,B384,Swin,Unhardened
+Pascal,swin_b12to14,RANDOM_VALUE,gp,68,5,47,B384,Swin,Unhardened
+Pascal,swin_b12to14,FLIP_SINGLE_BIT,ld,13,2,1,B384,Swin,Unhardened
+Pascal,swin_b12to14,RANDOM_VALUE,ld,81,8,5,B384,Swin,Unhardened
+Pascal,swin_b12to14,FLIP_SINGLE_BIT,fp32,18,3,0,B384,Swin,Unhardened
+Pascal,swin_b12to14,RANDOM_VALUE,fp32,87,14,0,B384,Swin,Unhardened
+Pascal,swin_b12to14,WARP_RANDOM_VALUE,fp32,147,14,0,B384,Swin,Unhardened
+Ampere,swin_b12to14,FLIP_SINGLE_BIT,gp,18,3,16,B384,Swin,Unhardened
+Ampere,swin_b12to14,RANDOM_VALUE,gp,65,1,26,B384,Swin,Unhardened
+Ampere,swin_b12to14,FLIP_SINGLE_BIT,ld,7,4,11,B384,Swin,Unhardened
+Ampere,swin_b12to14,RANDOM_VALUE,ld,72,1,12,B384,Swin,Unhardened
+Ampere,swin_b12to14,FLIP_SINGLE_BIT,fp32,15,2,0,B384,Swin,Unhardened
+Ampere,swin_b12to14,RANDOM_VALUE,fp32,89,5,0,B384,Swin,Unhardened
+Ampere,swin_b12to14,WARP_RANDOM_VALUE,fp32,149,12,0,B384,Swin,Unhardened
+Pascal,swin_l12to16,FLIP_SINGLE_BIT,gp,27,1,19,L256,Swin,Unhardened
+Pascal,swin_l12to16,RANDOM_VALUE,gp,93,7,30,L256,Swin,Unhardened
+Pascal,swin_l12to16,FLIP_SINGLE_BIT,ld,10,0,0,L256,Swin,Unhardened
+Pascal,swin_l12to16,RANDOM_VALUE,ld,92,8,0,L256,Swin,Unhardened
+Pascal,swin_l12to16,FLIP_SINGLE_BIT,fp32,22,0,0,L256,Swin,Unhardened
+Pascal,swin_l12to16,RANDOM_VALUE,fp32,131,9,0,L256,Swin,Unhardened
+Pascal,swin_l12to16,WARP_RANDOM_VALUE,fp32,192,13,0,L256,Swin,Unhardened
+Ampere,swin_l12to16,FLIP_SINGLE_BIT,gp,24,1,12,L256,Swin,Unhardened
+Ampere,swin_l12to16,RANDOM_VALUE,gp,91,10,24,L256,Swin,Unhardened
+Ampere,swin_l12to16,FLIP_SINGLE_BIT,ld,15,2,5,L256,Swin,Unhardened
+Ampere,swin_l12to16,RANDOM_VALUE,ld,90,10,8,L256,Swin,Unhardened
+Ampere,swin_l12to16,FLIP_SINGLE_BIT,fp32,20,3,0,L256,Swin,Unhardened
+Ampere,swin_l12to16,RANDOM_VALUE,fp32,88,11,0,L256,Swin,Unhardened
+Ampere,swin_l12to16,WARP_RANDOM_VALUE,fp32,186,11,0,L256,Swin,Unhardened
+Pascal,swin_b12to16-hd,FLIP_SINGLE_BIT,gp,27,0,23,B256,Swin,Hardened
+Pascal,swin_b12to16-hd,RANDOM_VALUE,gp,93,6,45,B256,Swin,Hardened
+Pascal,swin_b12to16-hd,FLIP_SINGLE_BIT,ld,12,1,1,B256,Swin,Hardened
+Pascal,swin_b12to16-hd,RANDOM_VALUE,ld,103,10,0,B256,Swin,Hardened
+Pascal,swin_b12to16-hd,FLIP_SINGLE_BIT,fp32,30,2,0,B256,Swin,Hardened
+Pascal,swin_b12to16-hd,RANDOM_VALUE,fp32,121,12,0,B256,Swin,Hardened
+Pascal,swin_b12to16-hd,WARP_RANDOM_VALUE,fp32,199,10,0,B256,Swin,Hardened
+Ampere,swin_b12to16-hd,FLIP_SINGLE_BIT,gp,39,0,11,B256,Swin,Hardened
+Ampere,swin_b12to16-hd,RANDOM_VALUE,gp,88,8,31,B256,Swin,Hardened
+Ampere,swin_b12to16-hd,FLIP_SINGLE_BIT,ld,18,0,4,B256,Swin,Hardened
+Ampere,swin_b12to16-hd,RANDOM_VALUE,ld,73,6,4,B256,Swin,Hardened
+Ampere,swin_b12to16-hd,FLIP_SINGLE_BIT,fp32,24,1,0,B256,Swin,Hardened
+Ampere,swin_b12to16-hd,RANDOM_VALUE,fp32,119,9,0,B256,Swin,Hardened
+Ampere,swin_b12to16-hd,WARP_RANDOM_VALUE,fp32,183,24,0,B256,Swin,Hardened
+Pascal,swin_b12to14-hd,FLIP_SINGLE_BIT,gp,21,3,22,B384,Swin,Hardened
+Pascal,swin_b12to14-hd,RANDOM_VALUE,gp,71,4,36,B384,Swin,Hardened
+Pascal,swin_b12to14-hd,FLIP_SINGLE_BIT,ld,14,1,0,B384,Swin,Hardened
+Pascal,swin_b12to14-hd,RANDOM_VALUE,ld,98,6,1,B384,Swin,Hardened
+Pascal,swin_b12to14-hd,FLIP_SINGLE_BIT,fp32,12,4,0,B384,Swin,Hardened
+Pascal,swin_b12to14-hd,RANDOM_VALUE,fp32,96,2,0,B384,Swin,Hardened
+Pascal,swin_b12to14-hd,WARP_RANDOM_VALUE,fp32,162,10,0,B384,Swin,Hardened
+Ampere,swin_b12to14-hd,FLIP_SINGLE_BIT,gp,15,2,19,B384,Swin,Hardened
+Ampere,swin_b12to14-hd,RANDOM_VALUE,gp,63,5,33,B384,Swin,Hardened
+Ampere,swin_b12to14-hd,FLIP_SINGLE_BIT,ld,9,3,4,B384,Swin,Hardened
+Ampere,swin_b12to14-hd,RANDOM_VALUE,ld,68,2,6,B384,Swin,Hardened
+Ampere,swin_b12to14-hd,FLIP_SINGLE_BIT,fp32,11,1,0,B384,Swin,Hardened
+Ampere,swin_b12to14-hd,RANDOM_VALUE,fp32,85,9,0,B384,Swin,Hardened
+Ampere,swin_b12to14-hd,WARP_RANDOM_VALUE,fp32,152,6,0,B384,Swin,Hardened
+Pascal,swin_l12to16-hd,FLIP_SINGLE_BIT,gp,27,0,21,L256,Swin,Hardened
+Pascal,swin_l12to16-hd,RANDOM_VALUE,gp,107,1,45,L256,Swin,Hardened
+Pascal,swin_l12to16-hd,FLIP_SINGLE_BIT,ld,13,1,0,L256,Swin,Hardened
+Pascal,swin_l12to16-hd,RANDOM_VALUE,ld,112,4,1,L256,Swin,Hardened
+Pascal,swin_l12to16-hd,FLIP_SINGLE_BIT,fp32,23,2,0,L256,Swin,Hardened
+Pascal,swin_l12to16-hd,RANDOM_VALUE,fp32,126,4,0,L256,Swin,Hardened
+Pascal,swin_l12to16-hd,WARP_RANDOM_VALUE,fp32,201,19,0,L256,Swin,Hardened
+Ampere,swin_l12to16-hd,FLIP_SINGLE_BIT,gp,14,0,13,L256,Swin,Hardened
+Ampere,swin_l12to16-hd,RANDOM_VALUE,gp,86,7,26,L256,Swin,Hardened
+Ampere,swin_l12to16-hd,FLIP_SINGLE_BIT,ld,5,0,2,L256,Swin,Hardened
+Ampere,swin_l12to16-hd,RANDOM_VALUE,ld,79,4,10,L256,Swin,Hardened
+Ampere,swin_l12to16-hd,FLIP_SINGLE_BIT,fp32,14,2,0,L256,Swin,Hardened
+Ampere,swin_l12to16-hd,RANDOM_VALUE,fp32,106,4,0,L256,Swin,Hardened
+Ampere,swin_l12to16-hd,WARP_RANDOM_VALUE,fp32,199,6,0,L256,Swin,Hardened
+Pascal,maxvit_l384,FLIP_SINGLE_BIT,gp,7,4,21,L384,MaxViT,Unhardened
+Pascal,maxvit_l384,RANDOM_VALUE,gp,21,46,44,L384,MaxViT,Unhardened
+Pascal,maxvit_l384,FLIP_SINGLE_BIT,ld,3,4,0,L384,MaxViT,Unhardened
+Pascal,maxvit_l384,RANDOM_VALUE,ld,23,55,0,L384,MaxViT,Unhardened
+Pascal,maxvit_l384,FLIP_SINGLE_BIT,fp32,1,4,0,L384,MaxViT,Unhardened
+Pascal,maxvit_l384,RANDOM_VALUE,fp32,21,55,0,L384,MaxViT,Unhardened
+Pascal,maxvit_l384,WARP_RANDOM_VALUE,fp32,52,110,0,L384,MaxViT,Unhardened
+Ampere,maxvit_l384,FLIP_SINGLE_BIT,gp,31,5,9,L384,MaxViT,Unhardened
+Ampere,maxvit_l384,RANDOM_VALUE,gp,40,48,25,L384,MaxViT,Unhardened
+Ampere,maxvit_l384,FLIP_SINGLE_BIT,ld,30,5,3,L384,MaxViT,Unhardened
+Ampere,maxvit_l384,RANDOM_VALUE,ld,32,58,4,L384,MaxViT,Unhardened
+Ampere,maxvit_l384,FLIP_SINGLE_BIT,fp32,34,4,0,L384,MaxViT,Unhardened
+Ampere,maxvit_l384,RANDOM_VALUE,fp32,34,56,0,L384,MaxViT,Unhardened
+Ampere,maxvit_l384,WARP_RANDOM_VALUE,fp32,54,101,1,L384,MaxViT,Unhardened
+Pascal,maxvit_l512,FLIP_SINGLE_BIT,gp,7,2,12,L512,MaxViT,Unhardened
+Pascal,maxvit_l512,RANDOM_VALUE,gp,25,47,31,L512,MaxViT,Unhardened
+Pascal,maxvit_l512,FLIP_SINGLE_BIT,ld,3,4,0,L512,MaxViT,Unhardened
+Pascal,maxvit_l512,RANDOM_VALUE,ld,25,62,1,L512,MaxViT,Unhardened
+Pascal,maxvit_l512,FLIP_SINGLE_BIT,fp32,4,8,0,L512,MaxViT,Unhardened
+Pascal,maxvit_l512,RANDOM_VALUE,fp32,27,60,0,L512,MaxViT,Unhardened
+Pascal,maxvit_l512,WARP_RANDOM_VALUE,fp32,45,123,0,L512,MaxViT,Unhardened
+Ampere,maxvit_l512,FLIP_SINGLE_BIT,gp,38,3,12,L512,MaxViT,Unhardened
+Ampere,maxvit_l512,RANDOM_VALUE,gp,47,38,27,L512,MaxViT,Unhardened
+Ampere,maxvit_l512,FLIP_SINGLE_BIT,ld,20,5,3,L512,MaxViT,Unhardened
+Ampere,maxvit_l512,RANDOM_VALUE,ld,54,50,7,L512,MaxViT,Unhardened
+Ampere,maxvit_l512,FLIP_SINGLE_BIT,fp32,21,5,0,L512,MaxViT,Unhardened
+Ampere,maxvit_l512,RANDOM_VALUE,fp32,32,64,1,L512,MaxViT,Unhardened
+Ampere,maxvit_l512,WARP_RANDOM_VALUE,fp32,61,98,0,L512,MaxViT,Unhardened
+Pascal,maxvit_l384-hd,FLIP_SINGLE_BIT,gp,7,1,13,L384,MaxViT,Hardened
+Pascal,maxvit_l384-hd,RANDOM_VALUE,gp,64,19,30,L384,MaxViT,Hardened
+Pascal,maxvit_l384-hd,FLIP_SINGLE_BIT,ld,7,1,0,L384,MaxViT,Hardened
+Pascal,maxvit_l384-hd,RANDOM_VALUE,ld,53,33,1,L384,MaxViT,Hardened
+Pascal,maxvit_l384-hd,FLIP_SINGLE_BIT,fp32,8,3,0,L384,MaxViT,Hardened
+Pascal,maxvit_l384-hd,RANDOM_VALUE,fp32,62,23,0,L384,MaxViT,Hardened
+Pascal,maxvit_l384-hd,WARP_RANDOM_VALUE,fp32,108,63,0,L384,MaxViT,Hardened
+Ampere,maxvit_l384-hd,FLIP_SINGLE_BIT,gp,28,1,11,L384,MaxViT,Hardened
+Ampere,maxvit_l384-hd,RANDOM_VALUE,gp,67,22,26,L384,MaxViT,Hardened
+Ampere,maxvit_l384-hd,FLIP_SINGLE_BIT,ld,28,1,5,L384,MaxViT,Hardened
+Ampere,maxvit_l384-hd,RANDOM_VALUE,ld,56,29,6,L384,MaxViT,Hardened
+Ampere,maxvit_l384-hd,FLIP_SINGLE_BIT,fp32,32,3,1,L384,MaxViT,Hardened
+Ampere,maxvit_l384-hd,RANDOM_VALUE,fp32,74,26,0,L384,MaxViT,Hardened
+Ampere,maxvit_l384-hd,WARP_RANDOM_VALUE,fp32,94,67,1,L384,MaxViT,Hardened
+Pascal,maxvit_l512-hd,FLIP_SINGLE_BIT,gp,9,2,20,L512,MaxViT,Hardened
+Pascal,maxvit_l512-hd,RANDOM_VALUE,gp,51,19,37,L512,MaxViT,Hardened
+Pascal,maxvit_l512-hd,FLIP_SINGLE_BIT,ld,4,3,2,L512,MaxViT,Hardened
+Pascal,maxvit_l512-hd,RANDOM_VALUE,ld,58,37,1,L512,MaxViT,Hardened
+Pascal,maxvit_l512-hd,FLIP_SINGLE_BIT,fp32,16,0,0,L512,MaxViT,Hardened
+Pascal,maxvit_l512-hd,RANDOM_VALUE,fp32,59,21,0,L512,MaxViT,Hardened
+Pascal,maxvit_l512-hd,WARP_RANDOM_VALUE,fp32,107,67,0,L512,MaxViT,Hardened
+Ampere,maxvit_l512-hd,FLIP_SINGLE_BIT,gp,42,1,10,L512,MaxViT,Hardened
+Ampere,maxvit_l512-hd,RANDOM_VALUE,gp,74,15,12,L512,MaxViT,Hardened
+Ampere,maxvit_l512-hd,FLIP_SINGLE_BIT,ld,32,2,7,L512,MaxViT,Hardened
+Ampere,maxvit_l512-hd,RANDOM_VALUE,ld,60,35,4,L512,MaxViT,Hardened
+Ampere,maxvit_l512-hd,FLIP_SINGLE_BIT,fp32,26,1,1,L512,MaxViT,Hardened
+Ampere,maxvit_l512-hd,RANDOM_VALUE,fp32,75,22,0,L512,MaxViT,Hardened
+Ampere,maxvit_l512-hd,WARP_RANDOM_VALUE,fp32,98,67,1,L512,MaxViT,Hardened

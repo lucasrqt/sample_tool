@@ -136,7 +136,7 @@ class Parser:
 
         return (res_stdout, res_stderr)
 
-    def parse_per_cat(self, app: App) -> Tuple[dict, dict]:
+    def parse_per_cat(self, app: App, calculate_percentage: bool) -> Tuple[dict, dict]:
         """
         Parses results depending on the category
         - SDC (tensor changed)
@@ -189,10 +189,10 @@ class Parser:
                             res[gp][md][due] += 1
                     except:
                         pass
-                
-                res[gp][md][sdc] = res[gp][md][sdc] * 100 / app.flt_p_fm
-                res[gp][md][crit_sdc] = res[gp][md][crit_sdc] * 100 / app.flt_p_fm
-                res[gp][md][due] = res[gp][md][due] * 100 / app.flt_p_fm
+                if calculate_percentage:
+                    res[gp][md][sdc] = res[gp][md][sdc] * 100 / app.flt_p_fm
+                    res[gp][md][crit_sdc] = res[gp][md][crit_sdc] * 100 / app.flt_p_fm
+                    res[gp][md][due] = res[gp][md][due] * 100 / app.flt_p_fm
 
         return res
 
