@@ -15,7 +15,7 @@ def save_database(data: list):
         "vit14l_224": ("L14-224", "Original ViT"),
         "vit14h": ("H14-224", "Original ViT"),
         "eva_base": ("B14-448", "EVA"),
-        "eva_large": ("L14_448", "EVA"),
+        "eva_large": ("L14-448", "EVA"),
         "swin_b12to16": ("B256", "Swin"),
         "swin_b12to14": ("B384", "Swin"),
         "swin_l12to16": ("L256", "Swin"),
