@@ -11,8 +11,8 @@ APP_NAME = "perf_measure.py"
 # Up to now it is 32 threads per warp
 THREADS_PER_WARP = 32
 
-# REPOSITORY_HOME = "/home/fernando/git_research/sample_tool"
-REPOSITORY_HOME = "/home/carol/sample_tool"
+REPOSITORY_HOME = "/home/fernando/git_research/sample_tool"
+# REPOSITORY_HOME = "/home/carol/sample_tool"
 PROFILE_DATA_PATH = f"{REPOSITORY_HOME}/data/performance_metrics"
 FINAL_PROFILE_DATABASE = f"{REPOSITORY_HOME}/data/final_profile_processed.csv"
 NVIDIA_SMI_LOG_PATH = f"{PROFILE_DATA_PATH}/nvidia_smi_data.csv"
