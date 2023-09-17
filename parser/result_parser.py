@@ -64,28 +64,28 @@ def main():
     # eva_l_path = f"{BASE_DIR}/pascal/{eva_l_n}"
     # eva_l = App(eva_l_n, eva_l_path, inj_per_fm, injections)
 
-    maxvit_384_n = "maxvit_l384-hd"
-    maxvit_384_path = f"{BASE_DIR}/pascal/{maxvit_384_n}"
-    maxvit_384 = App(maxvit_384_n, maxvit_384_path, inj_per_fm, injections)
-
-    maxvit_512_n = "maxvit_l512-hd"
-    maxvit_512_path = f"{BASE_DIR}/pascal/{maxvit_512_n}"
-    maxvit_512 = App(maxvit_512_n, maxvit_512_path, inj_per_fm, injections)
-
-    vit14h_n = "vit14h-hd"
-    vit14h_path = f"{BASE_DIR}/pascal/{vit14h_n}"
-    vit14h = App(vit14h_n, vit14h_path, inj_per_fm, injections)
-
-    apps = [
-        # swin_b1216,
-        # swin_b1224,
-        # swin_l1216,
-        # eva_b,
-        # eva_l,
-        maxvit_384,
-        maxvit_512,
-        vit14h,
-    ]
+    # maxvit_384_n = "maxvit_l384-hd"
+    # maxvit_384_path = f"{BASE_DIR}/pascal/{maxvit_384_n}"
+    # maxvit_384 = App(maxvit_384_n, maxvit_384_path, inj_per_fm, injections)
+    #
+    # maxvit_512_n = "maxvit_l512-hd"
+    # maxvit_512_path = f"{BASE_DIR}/pascal/{maxvit_512_n}"
+    # maxvit_512 = App(maxvit_512_n, maxvit_512_path, inj_per_fm, injections)
+    #
+    # vit14h_n = "vit14h-hd"
+    # vit14h_path = f"{BASE_DIR}/pascal/{vit14h_n}"
+    # vit14h = App(vit14h_n, vit14h_path, inj_per_fm, injections)
+    #
+    # apps = [
+    #     # swin_b1216,
+    #     # swin_b1224,
+    #     # swin_l1216,
+    #     # eva_b,
+    #     # eva_l,
+    #     maxvit_384,
+    #     maxvit_512,
+    #     vit14h,
+    # ]
     apps = list()
     for model_name in ["vit16_224", "vit16_384", "vit32s_224", "vit14l_224", "vit14h", "vit16_224-hd", "vit16_384-hd",
                        "vit32s_224-hd", "vit14l_224-hd", "vit14h-hd", "eva_base", "eva_large", "eva_base-hd",
